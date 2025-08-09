@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Users xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User>
+    <Id>3e8bd9f9-9221-4e5f-badf-05eded9f8419</Id>
+    <Username>user</Username>
+    <Email>user@gmail.com</Email>
+    <Password>fyHRpjK5GOJspVKEBcdG7A==:y+nyGZdRIT6KgfSCsZhEsu10UVmZV/Gc1n++CGb52zk=</Password>
+    <Role>User</Role>
+    <CreatedAt>2025-07-28T06:15:52.861329Z</CreatedAt>
+    <IsActive>true</IsActive>
+  </User>
+  <User>
+    <Id>e693217c-628e-4ad1-b1e8-8b2db4a80ceb</Id>
+    <Username>admin</Username>
+    <Email>admin@gmail.com</Email>
+    <Password>ZPNwi4D12Jyfy0m0JHGdlA==:4PQssUGH5fJj6xDskd1M27SArDgnfhWsmWZF7xc4A7Q=</Password>
+    <Role>Admin</Role>
+    <CreatedAt>2025-07-28T06:17:01.669068Z</CreatedAt>
+    <IsActive>true</IsActive>
+  </User>
+  <User>
+    <Id>f725581f-06b0-41ca-b13e-21932fec815b</Id>
+    <Username>chathurika</Username>
+    <Email>chathu@gmail.com</Email>
+    <Password>9SrMRr72T4dTt0vvgAOuWw==:QcKUi+C8UDQVQ1YAY+1c/9mUgdiDxXw/R0T2gzx496M=</Password>
+    <Role>User</Role>
+    <CreatedAt>2025-07-28T07:16:02.077314Z</CreatedAt>
+    <IsActive>true</IsActive>
+  </User>
+</Users>

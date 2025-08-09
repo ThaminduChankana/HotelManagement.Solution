@@ -1,0 +1,776 @@
+@page
+@model HotelTool.Web.Pages.ChatBot.ChatBotModel
+@{
+    ViewData["Title"] = "Smart Booking Assistant";
+}
+
+<link rel="stylesheet" href="~/css/chatbot.css" asp-append-version="true" />
+
+<div class="container">
+    <div class="header">
+        <h1>Smart Booking Assistant</h1>
+        <p>AI-powered predictions to help you find the best deals and availability</p>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>Hello! I'm your Smart Booking Assistant. I can predict room availability, forecast pricing trends, and help you find the best time to book your stay.</p>
+                    <div class="suggestions">
+                        <span class="suggestion-chip"
+                            onclick="sendSuggestion('Will rooms be available next month?')">Future
+                            Availability</span>
+                        <span class="suggestion-chip" onclick="sendSuggestion('When should I book for best prices?')">Best
+                            Booking Time</span>
+                        <span class="suggestion-chip" onclick="sendSuggestion('Will prices increase next week?')">Price
+                            Forecast</span>
+                        <span class="suggestion-chip" onclick="sendSuggestion('What are the busy periods?')">Demand
+                            Trends</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message bot typing-indicator" id="typingIndicator">
+                <div class="message-avatar">🤖</div>
+                <div class="typing-indicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <form class="chat-input-form" id="chatForm">
+                <input type="text" class="chat-input" id="chatInput"
+                    placeholder="Ask about future availability, price forecasts, or best booking times..."
+                    autocomplete="off">
+                <button type="submit" class="send-button" id="sendButton">
+                    🤖
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get actual room and reservation data from server-side model
+    const actualRooms = @Html.Raw(Model.RoomsJson);
+    const actualReservations = @Html.Raw(Model.ReservationsJson);
+
+    /**
+     * Predict future room availability based on booking patterns
+     * Analyzes historical data to forecast availability for customers
+     */
+    function predictFutureAvailability(daysAhead = 30) {
+        const now = new Date();
+        const predictions = [];
+        
+        // Analyze historical booking patterns by day of week
+        const bookingsByDay = {};
+        const bookingsByRoomType = {};
+        
+        actualReservations.forEach(reservation => {
+            const checkInDate = new Date(reservation.checkInDate);
+            const dayOfWeek = checkInDate.getDay();
+            const roomTypeId = reservation.roomTypeId;
+            
+            if (!bookingsByDay[dayOfWeek]) bookingsByDay[dayOfWeek] = 0;
+            if (!bookingsByRoomType[roomTypeId]) bookingsByRoomType[roomTypeId] = [];
+            
+            bookingsByDay[dayOfWeek]++;
+            bookingsByRoomType[roomTypeId].push(reservation);
+        });
+
+        // Calculate average bookings per day type
+        const avgBookingsPerDay = Object.values(bookingsByDay).reduce((sum, count) => sum + count, 0) / 7;
+
+        // Generate predictions for the next period
+        for (let i = 1; i <= daysAhead; i++) {
+            const date = new Date(now);
+            date.setDate(date.getDate() + i);
+            const dayOfWeek = date.getDay();
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+            
+            // Apply pattern-based multipliers
+            const baseBookings = bookingsByDay[dayOfWeek] || avgBookingsPerDay;
+            const weekendMultiplier = isWeekend ? 1.4 : 1.0;
+            const seasonalMultiplier = getSeasonalMultiplier(date);
+            
+            const predictedBookings = Math.round(baseBookings * weekendMultiplier * seasonalMultiplier);
+            const totalRooms = actualRooms.reduce((sum, room) => sum + room.totalRooms, 0);
+            const predictedAvailability = Math.max(0, totalRooms - predictedBookings);
+            const occupancyRate = Math.min(95, (predictedBookings / totalRooms) * 100);
+            
+            predictions.push({
+                date: date.toISOString().split('T')[0],
+                dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+                fullDate: date.toLocaleDateString(),
+                predictedBookings,
+                predictedAvailability,
+                occupancyRate: Math.round(occupancyRate),
+                isWeekend,
+                demandLevel: occupancyRate > 80 ? 'High' : occupancyRate > 60 ? 'Medium' : 'Low',
+                bookingRecommendation: occupancyRate > 80 ? 'Book Soon' : occupancyRate > 60 ? 'Good Time' : 'Great Deals'
+            });
+        }
+
+        return predictions;
+    }
+
+    /**
+     * Predict pricing trends for customers
+     * Helps customers understand when prices might change
+     */
+    function predictPricingTrends() {
+        const currentADR = actualReservations
+            .filter(r => r.status !== 'Canceled')
+            .reduce((sum, r) => {
+                const nights = Math.max(1, Math.round((new Date(r.checkOutDate) - new Date(r.checkInDate)) / (1000 * 60 * 60 * 24)));
+                return sum + (r.totalCost / nights);
+            }, 0) / actualReservations.length;
+
+        // Analyze demand patterns to predict pricing
+        const demandAnalysis = actualRooms.map(room => {
+            const roomBookings = actualReservations.filter(r => r.roomTypeId === room.id && r.status !== 'Canceled');
+            const demandScore = roomBookings.length / room.totalRooms;
+            
+            // Predict price changes based on demand
+            let priceDirection = 'stable';
+            let priceChange = 0;
+            let customerAdvice = '';
+            
+            if (demandScore > 0.8) {
+                priceDirection = 'increasing';
+                priceChange = 10;
+                customerAdvice = 'Book now - prices likely to increase';
+            } else if (demandScore < 0.4) {
+                priceDirection = 'decreasing';
+                priceChange = -5;
+                customerAdvice = 'Wait for better deals coming soon';
+            } else {
+                customerAdvice = 'Current prices are stable';
+            }
+
+            return {
+                ...room,
+                demandScore: Math.round(demandScore * 100),
+                priceDirection,
+                priceChange,
+                customerAdvice,
+                predictedPrice: room.basePriceAfterDiscount * (1 + priceChange / 100)
+            };
+        });
+
+        return {
+            currentADR: Math.round(currentADR),
+            roomAnalysis: demandAnalysis,
+            generalAdvice: getGeneralPricingAdvice(demandAnalysis)
+        };
+    }
+
+    /**
+     * Get seasonal multiplier for demand prediction
+     */
+    function getSeasonalMultiplier(date) {
+        const month = date.getMonth();
+        // Peak season (Dec-Feb, Jun-Aug): 1.3x
+        // Shoulder season (Mar-May, Sep-Nov): 1.0x
+        if (month >= 5 && month <= 7 || month >= 11 || month <= 1) {
+            return 1.3;
+        }
+        return 1.0;
+    }
+
+    /**
+     * Analyze best booking times for customers
+     */
+    function analyzeBestBookingTimes() {
+        const predictions = predictFutureAvailability(60); // 2 months ahead
+        
+        // Find periods with good availability and pricing
+        const goodDeals = predictions.filter(p => p.demandLevel === 'Low' || p.demandLevel === 'Medium');
+        const highDemandPeriods = predictions.filter(p => p.demandLevel === 'High');
+        
+        // Group by weeks for better customer understanding
+        const weeklyAnalysis = [];
+        for (let week = 0; week < 8; week++) {
+            const weekStart = week * 7;
+            const weekEnd = weekStart + 7;
+            const weekData = predictions.slice(weekStart, weekEnd);
+            
+            if (weekData.length === 0) continue;
+            
+            const avgOccupancy = weekData.reduce((sum, d) => sum + d.occupancyRate, 0) / weekData.length;
+            const avgAvailability = weekData.reduce((sum, d) => sum + d.predictedAvailability, 0) / weekData.length;
+            
+            weeklyAnalysis.push({
+                weekNumber: week + 1,
+                startDate: weekData[0].fullDate,
+                endDate: weekData[weekData.length - 1].fullDate,
+                avgOccupancy: Math.round(avgOccupancy),
+                avgAvailability: Math.round(avgAvailability),
+                recommendation: avgOccupancy < 60 ? 'Best Deals' : avgOccupancy < 80 ? 'Good Time' : 'Book Early',
+                expectedSavings: avgOccupancy < 60 ? '10-15%' : avgOccupancy < 80 ? '5-10%' : '0%'
+            });
+        }
+
+        return {
+            bestWeeks: weeklyAnalysis.filter(w => w.recommendation === 'Best Deals').slice(0, 3),
+            busyWeeks: weeklyAnalysis.filter(w => w.recommendation === 'Book Early').slice(0, 2),
+            allWeeks: weeklyAnalysis,
+            generalAdvice: generateBookingAdvice(weeklyAnalysis)
+        };
+    }
+
+    /**
+     * Generate general pricing advice
+     */
+    function getGeneralPricingAdvice(roomAnalysis) {
+        const highDemandRooms = roomAnalysis.filter(r => r.demandScore > 80).length;
+        const lowDemandRooms = roomAnalysis.filter(r => r.demandScore < 40).length;
+        const totalRooms = roomAnalysis.length;
+        
+        if (highDemandRooms > totalRooms * 0.6) {
+            return 'High demand period - book now to secure current rates before prices increase';
+        } else if (lowDemandRooms > totalRooms * 0.6) {
+            return 'Low demand period - great time for deals and potential price drops';
+        } else {
+            return 'Balanced demand - prices are stable, good time to book';
+        }
+    }
+
+    /**
+     * Generate booking timing advice
+     */
+    function generateBookingAdvice(weeklyAnalysis) {
+        const bestDeals = weeklyAnalysis.filter(w => w.recommendation === 'Best Deals').length;
+        const busy = weeklyAnalysis.filter(w => w.recommendation === 'Book Early').length;
+        
+        if (bestDeals > 3) {
+            return 'Excellent period for bookings with multiple weeks of great deals available';
+        } else if (busy > 4) {
+            return 'High demand period ahead - book early to secure availability';
+        } else {
+            return 'Mixed demand period - selective booking timing can save you money';
+        }
+    }
+
+    /**
+     * Predict demand trends for customer planning
+     */
+    function predictDemandTrends() {
+        const now = new Date();
+        const monthlyTrends = [];
+        
+        // Analyze next 3 months
+        for (let i = 0; i < 3; i++) {
+            const monthDate = new Date(now);
+            monthDate.setMonth(monthDate.getMonth() + i + 1);
+            const month = monthDate.getMonth();
+            
+            // Historical analysis for this month
+            const monthBookings = actualReservations.filter(r => {
+                const checkIn = new Date(r.checkInDate);
+                return checkIn.getMonth() === month;
+            });
+            
+            const seasonalMultiplier = getSeasonalMultiplier(monthDate);
+            const baseBookings = monthBookings.length;
+            const predictedBookings = Math.round(baseBookings * seasonalMultiplier * 1.05); // 5% growth trend
+            
+            const totalRooms = actualRooms.reduce((sum, room) => sum + room.totalRooms, 0);
+            const predictedOccupancy = Math.min(95, (predictedBookings / (totalRooms * 30)) * 100);
+            
+            monthlyTrends.push({
+                month: monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+                predictedOccupancy: Math.round(predictedOccupancy),
+                demandLevel: predictedOccupancy > 75 ? 'High' : predictedOccupancy > 50 ? 'Medium' : 'Low',
+                customerAdvice: predictedOccupancy > 75 ? 'Book early - limited availability expected' :
+                               predictedOccupancy < 50 ? 'Great deals expected - wait for promotions' :
+                               'Normal demand - flexible booking timing',
+                expectedPricing: predictedOccupancy > 75 ? 'Premium rates' : 
+                                predictedOccupancy < 50 ? 'Discounted rates' : 'Standard rates'
+            });
+        }
+
+        return monthlyTrends;
+    }
+
+    // DOM Elements
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    /**
+     * Add message to chat
+     */
+    function addMessage(content, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar">${isUser ? '👤' : '🤖'}</div>
+            <div class="message-content">${content}</div>
+        `;
+
+        chatMessages.insertBefore(messageDiv, typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+        typingIndicator.style.display = 'flex';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function hideTyping() {
+        typingIndicator.style.display = 'none';
+    }
+
+    /**
+     * Analyze customer query and provide predictive response
+     */
+    function analyzeQuery(query) {
+        const lowerQuery = query.toLowerCase();
+
+        if (lowerQuery.includes('future') || lowerQuery.includes('next month') || lowerQuery.includes('available') && (lowerQuery.includes('will') || lowerQuery.includes('predict'))) {
+            return generateFutureAvailabilityResponse();
+        } else if (lowerQuery.includes('price') && (lowerQuery.includes('increase') || lowerQuery.includes('decrease') || lowerQuery.includes('will') || lowerQuery.includes('forecast'))) {
+            return generatePriceForecastResponse();
+        } else if (lowerQuery.includes('when') && (lowerQuery.includes('book') || lowerQuery.includes('best time') || lowerQuery.includes('cheapest'))) {
+            return generateBestBookingTimeResponse();
+        } else if (lowerQuery.includes('busy') || lowerQuery.includes('demand') || lowerQuery.includes('trend') || lowerQuery.includes('peak')) {
+            return generateDemandTrendsResponse();
+        } else if (lowerQuery.includes('deal') || lowerQuery.includes('discount') || lowerQuery.includes('save') || lowerQuery.includes('cheap')) {
+            return generateDealsResponse();
+        } else if (lowerQuery.includes('current') || lowerQuery.includes('now') || lowerQuery.includes('today')) {
+            return generateCurrentAvailabilityResponse();
+        } else {
+            return generateSmartOverviewResponse();
+        }
+    }
+
+    /**
+     * Generate future availability prediction response
+     */
+    function generateFutureAvailabilityResponse() {
+        const predictions = predictFutureAvailability(30);
+        const highDemandDays = predictions.filter(p => p.demandLevel === 'High');
+        const goodDays = predictions.filter(p => p.demandLevel === 'Low' || p.demandLevel === 'Medium');
+
+        return `
+            <p><strong>🔮 30-Day Availability Forecast:</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(predictions.reduce((sum, p) => sum + p.predictedAvailability, 0) / predictions.length)}</div>
+                    <div class="stat-label">Avg Rooms Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${goodDays.length}</div>
+                    <div class="stat-label">Good Availability Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${highDemandDays.length}</div>
+                    <div class="stat-label">High Demand Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(predictions.reduce((sum, p) => sum + p.occupancyRate, 0) / predictions.length)}%</div>
+                    <div class="stat-label">Avg Occupancy</div>
+                </div>
+            </div>
+            <p><strong>📅 Next 7 Days Availability Forecast:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${predictions.slice(0, 7).map(day => `
+                    <li><strong>${day.dayName} (${day.fullDate}):</strong> 
+                        ${day.predictedAvailability} rooms available
+                        <span style="color: ${day.demandLevel === 'High' ? '#dc3545' : day.demandLevel === 'Medium' ? '#ffc107' : '#28a745'}; font-weight: bold;">
+                            [${day.bookingRecommendation}]
+                        </span>
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>💡 Smart Booking Advice:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>Best availability: ${goodDays.slice(0, 3).map(d => d.dayName + ' (' + d.fullDate + ')').join(', ')}</li>
+                <li>Book early for: ${highDemandDays.slice(0, 2).map(d => d.dayName + ' (' + d.fullDate + ')').join(', ')}</li>
+                <li>${highDemandDays.length > 5 ? 'High demand period - book soon for best selection' : 'Good availability overall - flexible booking timing'}</li>
+            </ul>
+        `;
+    }
+
+    /**
+     * Generate price forecast response
+     */
+    function generatePriceForecastResponse() {
+        const pricingData = predictPricingTrends();
+
+        return `
+            <p><strong>💰 Price Forecast & Trends:</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">LKR ${pricingData.currentADR.toLocaleString()}</div>
+                    <div class="stat-label">Current Avg Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${pricingData.roomAnalysis.filter(r => r.priceDirection === 'increasing').length}</div>
+                    <div class="stat-label">Prices Rising</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${pricingData.roomAnalysis.filter(r => r.priceDirection === 'decreasing').length}</div>
+                    <div class="stat-label">Deals Expected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${pricingData.roomAnalysis.filter(r => r.priceDirection === 'stable').length}</div>
+                    <div class="stat-label">Stable Prices</div>
+                </div>
+            </div>
+            <p><strong>📊 Room Type Price Predictions:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${pricingData.roomAnalysis.map(room => `
+                    <li><strong>${room.name}:</strong> 
+                        Current: LKR ${room.basePriceAfterDiscount.toLocaleString()} → 
+                        Predicted: LKR ${Math.round(room.predictedPrice).toLocaleString()}
+                        <span style="color: ${room.priceDirection === 'increasing' ? '#dc3545' : room.priceDirection === 'decreasing' ? '#28a745' : '#6c757d'}; font-weight: bold;">
+                            [${room.priceDirection === 'increasing' ? '↗️ Rising' : room.priceDirection === 'decreasing' ? '↘️ Falling' : '➡️ Stable'}]
+                        </span>
+                        <br><em style="font-size: 0.9em;">${room.customerAdvice}</em>
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>🎯 General Market Outlook:</strong></p>
+            <p style="background:  rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
+                ${pricingData.generalAdvice}
+            </p>
+        `;
+    }
+
+    /**
+     * Generate best booking time response
+     */
+    function generateBestBookingTimeResponse() {
+        const bookingData = analyzeBestBookingTimes();
+
+        return `
+            <p><strong>⏰ Best Times to Book (Next 8 Weeks):</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${bookingData.bestWeeks.length}</div>
+                    <div class="stat-label">Best Deal Weeks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${bookingData.busyWeeks.length}</div>
+                    <div class="stat-label">High Demand Weeks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${bookingData.bestWeeks[0]?.expectedSavings || '0%'}</div>
+                    <div class="stat-label">Max Expected Savings</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(bookingData.allWeeks.reduce((sum, w) => sum + w.avgAvailability, 0) / bookingData.allWeeks.length)}</div>
+                    <div class="stat-label">Avg Weekly Availability</div>
+                </div>
+            </div>
+            <p><strong>🎯 Top 3 Best Booking Periods:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${bookingData.bestWeeks.map((week, index) => `
+                    <li><strong>Week ${week.weekNumber} (${week.startDate} - ${week.endDate}):</strong> 
+                        ${week.avgAvailability} avg rooms available, 
+                        <span style="color: #28a745; font-weight: bold;">Save ${week.expectedSavings}</span>
+                        <span style="background: #d4edda; padding: 2px 6px; border-radius: 3px; font-size: 0.8em;">
+                            ${week.recommendation}
+                        </span>
+                    </li>
+                `).join('')}
+            </ul>
+            ${bookingData.busyWeeks.length > 0 ? `
+                <p><strong>⚠️ Book Early For:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    ${bookingData.busyWeeks.map(week => `
+                        <li><strong>Week ${week.weekNumber} (${week.startDate} - ${week.endDate}):</strong> 
+                            High demand expected - ${week.avgAvailability} avg rooms available
+                        </li>
+                    `).join('')}
+                </ul>
+            ` : ''}
+            <p><strong>💡 Smart Booking Strategy:</strong></p>
+            <p style="background:  rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin: 10px 0;">
+                ${bookingData.generalAdvice}
+            </p>
+        `;
+    }
+
+    /**
+     * Generate demand trends response
+     */
+    function generateDemandTrendsResponse() {
+        const demandData = predictDemandTrends();
+
+        return `
+            <p><strong>📈 3-Month Demand Forecast:</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${demandData.filter(m => m.demandLevel === 'High').length}</div>
+                    <div class="stat-label">High Demand Months</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${demandData.filter(m => m.demandLevel === 'Low').length}</div>
+                    <div class="stat-label">Low Demand Months</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(demandData.reduce((sum, m) => sum + m.predictedOccupancy, 0) / demandData.length)}%</div>
+                    <div class="stat-label">Avg Predicted Occupancy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${demandData.filter(m => m.expectedPricing === 'Discounted rates').length}</div>
+                    <div class="stat-label">Discount Months</div>
+                </div>
+            </div>
+            <p><strong>📅 Monthly Demand Outlook:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${demandData.map(month => `
+                    <li><strong>${month.month}:</strong> 
+                        ${month.predictedOccupancy}% occupancy
+                        <span style="color: ${month.demandLevel === 'High' ? '#dc3545' : month.demandLevel === 'Medium' ? '#ffc107' : '#28a745'}; font-weight: bold;">
+                            [${month.demandLevel} Demand]
+                        </span>
+                        <br><em style="font-size: 0.9em;">${month.customerAdvice}</em>
+                        <br><span style="background: ${month.expectedPricing === 'Premium rates' ? 'rgba(255, 255, 255, 0.1)' : month.expectedPricing === 'Discounted rates' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)'}; padding: 2px 6px; border-radius: 3px; font-size: 0.8em;">
+                            ${month.expectedPricing}
+                        </span>
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>🎯 Planning Recommendations:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Best value months:</strong> ${demandData.filter(m => m.demandLevel === 'Low').map(m => m.month.split(' ')[0]).join(', ') || 'None identified'}</li>
+                <li><strong>Book early for:</strong> ${demandData.filter(m => m.demandLevel === 'High').map(m => m.month.split(' ')[0]).join(', ') || 'None identified'}</li>
+                <li><strong>Flexible timing:</strong> ${demandData.filter(m => m.demandLevel === 'Medium').map(m => m.month.split(' ')[0]).join(', ') || 'None identified'}</li>
+            </ul>
+        `;
+    }
+
+    /**
+     * Generate deals and savings response
+     */
+    function generateDealsResponse() {
+        const pricingData = predictPricingTrends();
+        const bookingData = analyzeBestBookingTimes();
+        const dealsRooms = pricingData.roomAnalysis.filter(r => r.priceDirection === 'decreasing');
+
+        return `
+            <p><strong>💎 Smart Savings Opportunities:</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${dealsRooms.length}</div>
+                    <div class="stat-label">Rooms With Deals</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${bookingData.bestWeeks.length}</div>
+                    <div class="stat-label">Best Deal Weeks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${bookingData.bestWeeks[0]?.expectedSavings || '0%'}</div>
+                    <div class="stat-label">Max Savings Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${actualRooms.filter(r => r.discount > 0).length}</div>
+                    <div class="stat-label">Current Discounts</div>
+                </div>
+            </div>
+            ${dealsRooms.length > 0 ? `
+                <p><strong>🏷️ Room Types with Upcoming Deals:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    ${dealsRooms.map(room => `
+                        <li><strong>${room.name}:</strong> 
+                            Current: LKR ${room.basePriceAfterDiscount.toLocaleString()} → 
+                            Expected: LKR ${Math.round(room.predictedPrice).toLocaleString()}
+                            <span style="color: #28a745; font-weight: bold;">
+                                (Save ~${Math.abs(room.priceChange)}%)
+                            </span>
+                            <br><em style="font-size: 0.9em;">${room.customerAdvice}</em>
+                        </li>
+                    `).join('')}
+                </ul>
+            ` : ''}
+            <p><strong>📅 Best Money-Saving Periods:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${bookingData.bestWeeks.slice(0, 3).map(week => `
+                    <li><strong>${week.startDate} - ${week.endDate}:</strong> 
+                        Save up to ${week.expectedSavings} with ${week.avgAvailability} avg rooms available
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>💰 Current Discounts Available:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${actualRooms.filter(r => r.discount > 0).map(room => `
+                    <li><strong>${room.name}:</strong> 
+                        ${room.discount}% off - 
+                        ~~LKR ${room.price.toLocaleString()}~~ 
+                        <strong>LKR ${room.basePriceAfterDiscount.toLocaleString()}</strong>
+                    </li>
+                `).join('')}
+            </ul>
+            <p><strong>🎯 Smart Savings Strategy:</strong></p>
+            <p style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                Combine current discounts with predicted low-demand periods for maximum savings. 
+                ${dealsRooms.length > 0 ? 'Additional price drops expected soon!' : 'Current prices are competitive.'}
+            </p>
+        `;
+    }
+
+    /**
+     * Generate current availability response
+     */
+    function generateCurrentAvailabilityResponse() {
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        const currentReservations = actualReservations.filter(r => {
+            return (r.status === 'Active' || r.status === 'CheckedIn') &&
+                r.checkInDate <= todayStr && r.checkOutDate > todayStr;
+        });
+
+        const availability = actualRooms.map(room => {
+            const occupiedRooms = currentReservations.filter(r => r.roomTypeId === room.id).length;
+            const availableRooms = room.totalRooms - occupiedRooms;
+            return { ...room, availableRooms, isAvailable: availableRooms > 0 };
+        });
+
+        const totalAvailable = availability.reduce((sum, room) => sum + room.availableRooms, 0);
+
+        return `
+            <p><strong>🏨 Current Availability (Today):</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${totalAvailable}</div>
+                    <div class="stat-label">Rooms Available Now</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${availability.filter(r => r.isAvailable).length}</div>
+                    <div class="stat-label">Room Types Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${currentReservations.length}</div>
+                    <div class="stat-label">Current Guests</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${actualRooms.filter(r => r.discount > 0).length}</div>
+                    <div class="stat-label">Special Offers</div>
+                </div>
+            </div>
+            <p><strong>Available Right Now:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                ${availability.map(room => `
+                    <li><strong>${room.name}:</strong> 
+                        ${room.availableRooms > 0 ? 
+                            `✅ ${room.availableRooms} rooms available - LKR ${room.basePriceAfterDiscount.toLocaleString()}/night` : 
+                            '❌ Currently fully booked'
+                        }
+                        ${room.discount > 0 ? ` <span style="color: #28a745; font-weight: bold;">(${room.discount}% off!)</span>` : ''}
+                    </li>
+                `).join('')}
+            </ul>
+            <div class="suggestions" style="margin-top: 10px;">
+                <span class="suggestion-chip" onclick="sendSuggestion('Will prices increase next week?')">Price Forecast</span>
+                <span class="suggestion-chip" onclick="sendSuggestion('When should I book for best prices?')">Best Booking Time</span>
+            </div>
+        `;
+    }
+
+    /**
+     * Generate smart overview response
+     */
+    function generateSmartOverviewResponse() {
+        const predictions = predictFutureAvailability(30);
+        const pricingData = predictPricingTrends();
+        const totalAvailable = predictions.reduce((sum, p) => sum + p.predictedAvailability, 0) / predictions.length;
+
+        return `
+            <p><strong>🤖 Smart Booking Intelligence Overview:</strong></p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(totalAvailable)}</div>
+                    <div class="stat-label">Avg Daily Availability</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${pricingData.roomAnalysis.filter(r => r.priceDirection === 'increasing').length}</div>
+                    <div class="stat-label">Prices Rising</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${predictions.filter(p => p.demandLevel === 'Low').length}</div>
+                    <div class="stat-label">Low Demand Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${actualRooms.length}</div>
+                    <div class="stat-label">Room Types</div>
+                </div>
+            </div>
+            <p><strong>🎯 Key Insights for Smart Booking:</strong></p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Best Availability:</strong> ${predictions.filter(p => p.demandLevel === 'Low').length} low-demand days in next 30 days</li>
+                <li><strong>Price Trends:</strong> ${pricingData.generalAdvice.toLowerCase()}</li>
+                <li><strong>Current Deals:</strong> ${actualRooms.filter(r => r.discount > 0).length} room types with active discounts</li>
+                <li><strong>Booking Urgency:</strong> ${predictions.filter(p => p.demandLevel === 'High').length > 5 ? 'High - book soon for best selection' : 'Low - flexible timing available'}</li>
+            </ul>
+            <p><strong>🔮 What I can predict for you:</strong></p>
+            <div class="suggestions" style="margin-top: 10px;">
+                <span class="suggestion-chip" onclick="sendSuggestion('Will rooms be available next month?')">Future Availability</span>
+                <span class="suggestion-chip" onclick="sendSuggestion('When should I book for best prices?')">Best Booking Time</span>
+                <span class="suggestion-chip" onclick="sendSuggestion('Will prices increase next week?')">Price Forecast</span>
+                <span class="suggestion-chip" onclick="sendSuggestion('What are the busy periods?')">Demand Trends</span>
+            </div>
+        `;
+    }
+
+    /**
+     * Send suggestion
+     */
+    function sendSuggestion(text) {
+        chatInput.value = text;
+        handleSubmit();
+    }
+
+    /**
+     * Handle form submission
+     */
+    function handleSubmit() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        chatInput.value = '';
+        sendButton.disabled = true;
+
+        showTyping();
+        setTimeout(() => {
+            hideTyping();
+            const response = analyzeQuery(message);
+            addMessage(response);
+            sendButton.disabled = false;
+            chatInput.focus();
+        }, 1500 + Math.random() * 1000);
+    }
+
+    // Event listeners
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleSubmit();
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit();
+        }
+    });
+
+    // Initialize
+    window.addEventListener('load', () => {
+        chatInput.focus();
+    });
+</script>

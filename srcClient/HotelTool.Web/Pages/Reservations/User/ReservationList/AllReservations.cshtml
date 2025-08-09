@@ -1,0 +1,179 @@
+@page
+@model HotelTool.Web.Pages.Reservations.AllReservationsModel
+@{
+    ViewData["Title"] = "All Reservations";
+}
+
+@using HotelTool.Web.Models
+<link rel="stylesheet" href="~/css/customer-reservation-list.css" asp-append-version="true" />
+
+<div class="container">
+    <h2>Reservations</h2>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-warning">
+            @Model.StatusMessage
+        </div>
+    }
+
+    @if (!Model.Reservations.Any())
+    {
+        <div class="no-reservations">
+            <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.7;"></i>
+            <p>No reservations found.</p>
+            <p style="font-size: 1rem; margin-top: 10px; opacity: 0.8;">Start by making your first reservation!</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Room Type</th>
+                        <th>Board Type</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Total Cost</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model.Reservations)
+                    {
+                        var room = Model.GetRoomByTypeId(reservation.RoomTypeId);
+                        <tr>
+                            <td>
+                                <span class="room-type">@(room?.Name ?? "Unknown")</span>
+                            </td>
+                            <td>
+                                <span class="board-type">
+                                    @(string.IsNullOrEmpty(reservation.FullOrHalfBoard) ? "Multiple Days" :
+                                                                reservation.FullOrHalfBoard)
+                                </span>
+                            </td>
+                            <td class="date-cell">
+                                @reservation.CheckInDate.ToShortDateString()
+                            </td>
+                            <td class="date-cell">
+                                @reservation.CheckOutDate.ToShortDateString()
+                            </td>
+                            <td>
+                                <span class="cost-amount">LKR @reservation.TotalCost.ToString("N0")</span>
+                            </td>
+                            <td>
+                                @if (reservation.Status != ReservationStatus.Canceled)
+                                {
+                                    <div class="action-buttons">
+                                        <a asp-page="../EditReservation/EditReservation" asp-route-id="@reservation.Id"
+                                            class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+
+                                        <form method="post" asp-page-handler="Cancel" asp-route-id="@reservation.Id"
+                                            class="cancel-form">
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="showCancelModal('@reservation.Id', '@(room?.Name ?? "Unknown")', '@reservation.CheckInDate.ToShortDateString()', '@reservation.CheckOutDate.ToShortDateString()')">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-canceled">
+                                        <i class="fas fa-ban"></i> Canceled
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+<div id="cancelModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> Cancel Reservation</h3>
+            <span class="close" onclick="closeCancelModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to cancel this reservation?</p>
+            <div class="reservation-details">
+                <div class="detail-item">
+                    <strong>Room:</strong> <span id="modalRoomName"></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Check-in:</strong> <span id="modalCheckIn"></span>
+                </div>
+                <div class="detail-item">
+                    <strong>Check-out:</strong> <span id="modalCheckOut"></span>
+                </div>
+            </div>
+            <div class="warning-message">
+                <i class="fas fa-info-circle"></i>
+                <strong>Note:</strong> Cancellations within 48 hours of check-in are not allowed.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">
+                <i class="fas fa-arrow-left"></i> Keep Reservation
+            </button>
+            <button type="button" class="btn btn-danger" onclick="confirmCancellation()" id="confirmCancelBtn">
+                <i class="fas fa-ban"></i> Yes, Cancel Reservation
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentReservationId = null;
+    // Show modal with reservation details
+    function showCancelModal(reservationId, roomName, checkIn, checkOut) {
+        currentReservationId = reservationId;
+
+        document.getElementById('modalRoomName').textContent = roomName;
+        document.getElementById('modalCheckIn').textContent = checkIn;
+        document.getElementById('modalCheckOut').textContent = checkOut;
+
+        document.getElementById('cancelModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    // Close modal
+    function closeCancelModal() {
+        document.getElementById('cancelModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        currentReservationId = null;
+    }
+    // Submit the cancellation form programmatically
+    function confirmCancellation() {
+        if (currentReservationId) {
+            const form = document.querySelector(`form[action*="${currentReservationId}"]`);
+            if (form) {
+                form.submit();
+            } else {
+                const cancelForm = document.createElement('form');
+                cancelForm.method = 'post';
+                cancelForm.action = `?handler=Cancel&id=${currentReservationId}`;
+                document.body.appendChild(cancelForm);
+                cancelForm.submit();
+            }
+        }
+    }
+    // Allow modal to be dismissed by clicking outside
+    window.onclick = function (event) {
+        const modal = document.getElementById('cancelModal');
+        if (event.target === modal) {
+            closeCancelModal();
+        }
+    }
+    // Allow Escape key to close modal
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeCancelModal();
+        }
+    });
+</script>

@@ -1,0 +1,221 @@
+@page "{id:guid}"
+@model HotelTool.Web.Pages.ReserveRoom.EditReservation.EditReservationModel
+@{
+    ViewData["Title"] = "Edit Reservation";
+}
+<link rel="stylesheet" href="~/css/edit-reservation.css" asp-append-version="true" />
+<div class="container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    <div class="header">
+        <h2>Edit Reservation</h2>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <form method="post" class="reservation-form" id="editReservationForm">
+        <input asp-for="Reservation.Id" type="hidden" />
+        <input asp-for="Reservation.TotalCost" type="hidden" />
+
+        <div class="form-section">
+            <h3><i class="fas fa-user"></i> Guest Information</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="Reservation.FirstName" class="form-label">
+                        <i class="fas fa-user"></i> First Name
+                    </label>
+                    <input asp-for="Reservation.FirstName" class="form-control" placeholder="Enter first name"
+                        required />
+                    <span asp-validation-for="Reservation.FirstName" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.LastName" class="form-label">
+                        <i class="fas fa-user"></i> Last Name
+                    </label>
+                    <input asp-for="Reservation.LastName" class="form-control" placeholder="Enter last name" required />
+                    <span asp-validation-for="Reservation.LastName" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.Email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input asp-for="Reservation.Email" type="email" class="form-control"
+                        placeholder="Enter email address" required />
+                    <span asp-validation-for="Reservation.Email" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.PhoneNumber" class="form-label">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input asp-for="Reservation.PhoneNumber" class="form-control" placeholder="Enter phone number"
+                        required />
+                    <span asp-validation-for="Reservation.PhoneNumber" class="validation-error"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Reservation.Country" class="form-label">
+                        <i class="fas fa-globe"></i> Country
+                    </label>
+                    <input asp-for="Reservation.Country" class="form-control" placeholder="Enter country" required />
+                    <span asp-validation-for="Reservation.Country" class="validation-error"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-bed"></i> Room & Stay Details</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="Reservation.RoomTypeId" class="form-label">
+                        <i class="fas fa-home"></i> Room Type
+                    </label>
+                    <select asp-for="Reservation.RoomTypeId" asp-items="Model.RoomTypes" class="form-control" required>
+                        <option value="">Select a room type</option>
+                    </select>
+                    <span asp-validation-for="Reservation.RoomTypeId" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.FullOrHalfBoard" class="form-label">
+                        <i class="fas fa-utensils"></i> Board Type
+                    </label>
+                    <select asp-for="Reservation.FullOrHalfBoard" class="form-control" required>
+                        <option value="">Select board type</option>
+                        <option value="Half Board">Half Board</option>
+                        <option value="Full Board">Full Board</option>
+                    </select>
+                    <span asp-validation-for="Reservation.FullOrHalfBoard" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.CheckInDate" class="form-label">
+                        <i class="fas fa-calendar-plus"></i> Check-In Date
+                    </label>
+                    <input asp-for="Reservation.CheckInDate" type="date" class="form-control" required />
+                    <span asp-validation-for="Reservation.CheckInDate" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.CheckOutDate" class="form-label">
+                        <i class="fas fa-calendar-minus"></i> Check-Out Date
+                    </label>
+                    <input asp-for="Reservation.CheckOutDate" type="date" class="form-control" required />
+                    <span asp-validation-for="Reservation.CheckOutDate" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.PayBy" class="form-label">
+                        <i class="fas fa-credit-card"></i> Payment Method
+                    </label>
+                    <select asp-for="Reservation.PayBy" class="form-control" required>
+                        <option value="">Select payment method</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Online Payment">Online Payment</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Mobile Payment">Mobile Payment</option>
+                        <option value="Pay at Hotel">Pay at Hotel</option>
+                    </select>
+                    <span asp-validation-for="Reservation.PayBy" class="validation-error"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="form-check">
+                        <input asp-for="Reservation.IsWorkRelated" class="form-check-input" type="checkbox" />
+                        <label asp-for="Reservation.IsWorkRelated" class="form-check-label">
+                            <i class="fas fa-briefcase"></i> This is a work-related booking
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fas fa-comment"></i> Additional Information</h3>
+            <div class="form-group">
+                <label asp-for="Reservation.SpecialRequest" class="form-label">
+                    <i class="fas fa-star"></i> Special Requests
+                </label>
+                <textarea asp-for="Reservation.SpecialRequest" class="form-control" rows="4"
+                    placeholder="Any special requests or requirements..."></textarea>
+                <span asp-validation-for="Reservation.SpecialRequest" class="validation-error"></span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary" id="updateBtn">
+                <i class="fas fa-save"></i>
+                <span class="btn-text">Update Reservation</span>
+                <div class="loading-spinner" style="display: none;"></div>
+            </button>
+            <a asp-page="../ReservationList/AllReservations" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Function to recalculate nights and enable/disable board type selection
+    function updatePricingAndBoardType() {
+        function updatePricingAndBoardType() {
+            const checkInInput = document.querySelector('input[name="Reservation.CheckInDate"]');
+            const checkOutInput = document.querySelector('input[name="Reservation.CheckOutDate"]');
+            const boardTypeDropdown = document.querySelector('select[name="Reservation.FullOrHalfBoard"]');
+
+            const checkIn = checkInInput.value;
+            const checkOut = checkOutInput.value;
+
+            if (checkIn && checkOut) {
+                const checkInDate = new Date(checkIn);
+                const checkOutDate = new Date(checkOut);
+                const timeDiff = checkOutDate.getTime() - checkInDate.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                // Update number of nights display
+                const nightsDisplay = document.getElementById('numberOfNights');
+                if (nightsDisplay) {
+                    nightsDisplay.textContent = daysDiff > 0 ? daysDiff : 'Invalid dates';
+                }
+
+                // Disable board type if more than one night
+                if (daysDiff > 1) {
+                    boardTypeDropdown.disabled = true;
+                    boardTypeDropdown.value = "";
+                } else {
+                    boardTypeDropdown.disabled = false;
+                }
+            }
+        }
+
+        // Prevent multiple form submissions
+        document.getElementById('editReservationForm').addEventListener('submit', function (e) {
+            const updateBtn = document.getElementById('updateBtn');
+            const btnText = updateBtn.querySelector('.btn-text');
+            const spinner = updateBtn.querySelector('.loading-spinner');
+            const icon = updateBtn.querySelector('.fas');
+
+            // Disable button and show loading
+            updateBtn.disabled = true;
+            btnText.textContent = 'Updating...';
+            icon.style.display = 'none';
+            spinner.style.display = 'block';
+        });
+
+        // Hook up change events to check-in/check-out fields
+        document.querySelector('input[name="Reservation.CheckInDate"]').addEventListener('change', updatePricingAndBoardType);
+        document.querySelector('input[name="Reservation.CheckOutDate"]').addEventListener('change', updatePricingAndBoardType);
+
+        // Run on page load
+        updatePricingAndBoardType();
+
+    }
+</script>

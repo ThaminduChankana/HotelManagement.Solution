@@ -1,0 +1,132 @@
+@page
+@model HotelTool.Web.Pages.Reservations.AdminReservationListModel
+@{
+    ViewData["Title"] = "Admin - All Reservations";
+}
+@using HotelTool.Web.Models
+
+<link rel="stylesheet" href="~/css/admin-reservation-list.css" asp-append-version="true" />
+
+<div class="admin-reservations-page container">
+    <h2>All Reservations</h2>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> @Model.StatusMessage
+        </div>
+    }
+
+    @if (!Model.Reservations.Any())
+    {
+        <div class="no-reservations">
+            <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.7;"></i>
+            <p>No reservations found.</p>
+            <p style="font-size: 1rem; margin-top: 10px; opacity: 0.8;">No reservations have been made yet.</p>
+        </div>
+    }
+    else
+    {
+        <div class="admin-nav">
+            <a class="nav-link-admin" asp-page="../../../Report/WeeklyReport/WeeklyReport">
+                <i class="fas fa-chart-line"></i> Weekly Report
+            </a>
+            <a class="nav-link-admin" asp-page="../../../Report/DailyReport/DailySpecialRequests">
+                <i class="fas fa-clipboard-list"></i> Daily Special Requests
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Guest</th>
+                        <th><i class="fas fa-phone"></i> Phone Number</th>
+                        <th><i class="fas fa-calendar-plus"></i> Check-In</th>
+                        <th><i class="fas fa-calendar-minus"></i> Check-Out</th>
+                        <th><i class="fas fa-info-circle"></i> Status</th>
+                        <th><i class="fas fa-door-open"></i> Room Number</th>
+                        <th><i class="fas fa-cogs"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var res in Model.Reservations)
+                    {
+                        <tr>
+                            <td>
+                                <div class="guest-name">@res.FirstName @res.LastName</div>
+                            </td>
+                            <td>
+                                <div class="phone-number">@res.PhoneNumber</div>
+                            </td>
+                            <td>
+                                <div class="date-cell">@res.CheckInDate.ToShortDateString()</div>
+                            </td>
+                            <td>
+                                <div class="date-cell">@res.CheckOutDate.ToShortDateString()</div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-@(res.Status.ToString().ToLower())">
+                                    @switch (res.Status.ToString().ToLower())
+                                    {
+                                        case "confirmed":
+                                            <i class="fas fa-check"></i>
+                                            break;
+                                        case "canceled":
+                                            <i class="fas fa-ban"></i>
+                                            break;
+                                        case "pending":
+                                            <i class="fas fa-clock"></i>
+                                            break;
+                                        case "checkedin":
+                                            <i class="fas fa-sign-in-alt"></i>
+                                            break;
+                                        case "checkedout":
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            break;
+                                        case "active":
+                                            <i class="fas fa-circle" style="color: #2ecc71;"></i>
+                                            break;
+                                        case "completed":
+                                            <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+                                            break;
+                                        default:
+                                            <i class="fas fa-question"></i>
+                                            break;
+                                    }
+                                    @res.Status
+                                </span>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(res.AllocatedRoomNumber))
+                                {
+                                    <div class="room-number">@res.AllocatedRoomNumber</div>
+                                }
+                                else
+                                {
+                                    <span style="opacity: 0.6; font-style: italic;">Not Assigned</span>
+                                }
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="UpdateStatus" class="admin-form">
+                                    <input type="hidden" name="ReservationId" value="@res.Id" />
+                                    <select name="NewStatus" class="form-select">
+                                        @foreach (var status in Enum.GetValues(typeof(ReservationStatus)))
+                                        {
+                                            <option value="@status" selected="@(status.Equals(res.Status))">@status</option>
+                                        }
+                                    </select>
+                                    <textarea name="AdminNote" class="form-control"
+                                placeholder="Add admin note...">@res.AdminNote</textarea>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Update
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -1,0 +1,149 @@
+@page
+@model HotelTool.Web.Pages.Rooms.CreateModel
+@{
+    ViewData["Title"] = "Add Room";
+}
+
+<link rel="stylesheet" href="~/css/create-room.css" asp-append-version="true" />
+<div class="container">
+    <h2>Add Room</h2>
+
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success">
+            @Model.StatusMessage
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data" class="room-form" id="roomForm">
+        <div class="form-group">
+            <label asp-for="Room.Name">Room Type:</label>
+            <input asp-for="Room.Name" required placeholder="Enter room type" />
+            <span asp-validation-for="Room.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.NumberOfGuests">Number of Guests:</label>
+            <input asp-for="Room.NumberOfGuests" type="number" min="2" required placeholder="Maximum guests allowed" />
+            <span asp-validation-for="Room.NumberOfGuests" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.TotalRooms">Number of Rooms:</label>
+            <input asp-for="Room.TotalRooms" type="number" min="1" required placeholder="Total rooms of this type" />
+            <span asp-validation-for="Room.TotalRooms" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Room Numbers:</label>
+            <div id="roomNumbersContainer">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.BreakfastPrice">Breakfast Price:</label>
+            <input asp-for="Room.BreakfastPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.BreakfastPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.LunchPrice">Lunch Price:</label>
+            <input asp-for="Room.LunchPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.LunchPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.DinnerPrice">Dinner Price:</label>
+            <input asp-for="Room.DinnerPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.DinnerPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.Price">Room Price:</label>
+            <input asp-for="Room.Price" type="number" step="0.01" min="10000" required
+                placeholder="Price per night in LKR" />
+            <span asp-validation-for="Room.Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.Discount">Discount (%):</label>
+            <input asp-for="Room.Discount" type="number" step="0.01" min="0" max="100"
+                placeholder="Optional discount percentage" />
+            <span asp-validation-for="Room.Discount" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Room Features:</label>
+            <select asp-for="SelectedFeatures" asp-items="Model.AllFeatures" multiple></select>
+        </div>
+
+        <div class="form-group">
+            <label>Booking Options:</label>
+            <select asp-for="SelectedOptions" asp-items="Model.AllOptions" multiple></select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UploadedImages">Upload Room Images:</label>
+            <input asp-for="UploadedImages" type="file" multiple accept="image/*" />
+            <span asp-validation-for="UploadedImages" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <a asp-page="../ListRoom/RoomList" class="btn-cancel">
+                <i class="fas fa-arrow-left"></i> Cancel
+            </a>
+            <button type="submit" id="submitBtn">
+                <i class="fas fa-save"></i> Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Disable submit button on form submit to prevent double-clicks
+        document.getElementById('roomForm').addEventListener('submit', function (e) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Room...';
+
+            // Reset after 10s in case of soft failure
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Room';
+            }, 10000);
+        });
+        // Re-enable the submit button if user navigates back to this page 
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Room';
+            }
+        });
+        // Auto-generate room number fields based on TotalRooms value
+        const totalRoomsInput = document.getElementById("Room_TotalRooms");
+        const roomNumbersContainer = document.getElementById("roomNumbersContainer");
+
+        function updateRoomNumberInputs() {
+            const count = parseInt(totalRoomsInput.value);
+            roomNumbersContainer.innerHTML = "";
+
+            if (count > 0 && count <= 100) {
+                for (let i = 0; i < count; i++) {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "RoomNumbers";
+                    input.placeholder = `Room Number ${i + 1}`;
+                    input.required = true;
+                    roomNumbersContainer.appendChild(input);
+                }
+            }
+        }
+        // Attach event listeners to trigger room number input rendering
+        totalRoomsInput.addEventListener("input", updateRoomNumberInputs);
+        window.addEventListener("DOMContentLoaded", updateRoomNumberInputs);
+    </script>
+}

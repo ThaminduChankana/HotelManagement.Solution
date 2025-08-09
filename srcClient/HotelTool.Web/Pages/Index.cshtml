@@ -1,0 +1,383 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Welcome to LuxuryStay Hotel";
+}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            Welcome to <span class="brand-highlight">LuxuryStay</span>
+                        </h1>
+                        <h2 class="hero-subtitle">Experience Luxury Like Never Before</h2>
+                        <p class="hero-description">
+                            Discover the perfect blend of comfort, elegance, and exceptional service
+                            in the heart of the city. Your unforgettable stay begins here.
+                        </p>
+                        <div class="hero-actions">
+                            <button class="btn-secondary" onclick="scrollToRooms()">
+                                <i class="fas fa-eye"></i>
+                                Explore Rooms
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image">
+                        <div class="floating-card">
+                            <div class="card-content">
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">5/5 Guest Rating</span>
+                                </div>
+                                <p class="testimonial">"Absolutely stunning hotel with exceptional service!"</p>
+                                <p class="guest-name">- Sarah Johnson</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<section id="rooms" class="rooms-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Luxury Accommodations</h2>
+            <p>Choose from our carefully designed rooms and suites</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Deluxe Room">
+                        <div class="room-badge">Popular</div>
+                    </div>
+                    <div class="room-content">
+                        <h4>Deluxe King</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> King Bed</span>
+                            <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span><i class="fas fa-tv"></i> Smart TV</span>
+                        </div>
+                        <p class="room-description">
+                            Spacious and elegantly furnished room with city views and modern amenities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Executive Suite">
+                        <div class="room-badge premium">Premium</div>
+                    </div>
+                    <div class="room-content">
+                        <h4>Executive Suite</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> King Bed</span>
+                            <span><i class="fas fa-couch"></i> Living Area</span>
+                            <span><i class="fas fa-bath"></i> Jacuzzi</span>
+                        </div>
+                        <p class="room-description">
+                            Luxurious suite with separate living area, premium amenities, and stunning views.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            alt="Presidential Suite">
+                        <div class="room-badge luxury">Luxury</div>
+                    </div>
+                    <div class="room-content">
+                        <h4>Presidential Suite</h4>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> King Bed</span>
+                            <span><i class="fas fa-utensils"></i> Kitchenette</span>
+                            <span><i class="fas fa-mountain"></i> Balcony</span>
+                        </div>
+                        <p class="room-description">
+                            Our most exclusive accommodation with panoramic views and personalized service.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="amenities-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>World-Class Amenities</h2>
+            <p>Everything you need for an unforgettable stay</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="amenity-card">
+                    <div class="amenity-icon">
+                        <i class="fas fa-swimming-pool"></i>
+                    </div>
+                    <h5>Infinity Pool</h5>
+                    <p>Rooftop infinity pool with breathtaking city views and poolside service.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="amenity-card">
+                    <div class="amenity-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h5>Luxury Spa</h5>
+                    <p>Full-service spa offering rejuvenating treatments and wellness therapies.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="amenity-card">
+                    <div class="amenity-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h5>Fitness Center</h5>
+                    <p>State-of-the-art fitness equipment available 24/7 for our guests.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="amenity-card">
+                    <div class="amenity-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h5>Fine Dining</h5>
+                    <p>Award-winning restaurants serving international cuisine and local delicacies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="reviews-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>What Our Guests Say</h2>
+            <p>Real experiences from our valued guests</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">
+                        "Exceptional service and beautiful rooms. The staff went above and beyond
+                        to make our anniversary celebration perfect. Highly recommended!"
+                    </p>
+                    <div class="review-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h6>Michael & Lisa Chen</h6>
+                            <span>Stayed in Executive Suite</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">
+                        "Amazing location with stunning views. The rooftop pool is incredible and
+                        the spa treatments were so relaxing. Will definitely return!"
+                    </p>
+                    <div class="review-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h6>Emma Rodriguez</h6>
+                            <span>Business Traveler</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="review-card">
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">
+                        "Perfect for our family vacation. Kids loved the pool and we enjoyed
+                        the excellent dining options. Clean, comfortable, and great value."
+                    </p>
+                    <div class="review-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h6>David Johnson Family</h6>
+                            <span>Family Vacation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="contact-info">
+                    <h3>Visit LuxuryStay Hotel</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h6>Address</h6>
+                            <p>123, Galle Road, Colombo 07<br>Sri Lanka</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h6>Phone</h6>
+                            <p>+94 (11) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h6>Email</h6>
+                            <p>reservations@luxurystay.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map"></i>
+                        <h4>Interactive Map</h4>
+                        <p>Located in the heart of the city with easy access to attractions, shopping, and dining.</p>
+                        <button class="btn-map" onclick="showComingSoon('Google Maps')">
+                            <i class="fas fa-directions"></i>
+                            Get Directions
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h3>Stay Updated with Special Offers</h3>
+                    <p>Subscribe to our newsletter and be the first to know about exclusive deals and packages.</p>
+                </div>
+                <div class="col-lg-6">
+                    <form class="newsletter-form">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Enter your email address" required>
+                            <button type="submit" class="btn-subscribe">
+                                <i class="fas fa-paper-plane"></i>
+                                Subscribe
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="~/css/customer-home.css" asp-append-version="true" />
+
+<script>
+    // Smooth scrolling functions
+    function scrollToBooking() {
+        document.getElementById('booking').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToRooms() {
+        document.getElementById('rooms').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+
+    const newsletterForm = document.querySelector('.newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Thank you for subscribing! You will receive our latest offers and updates.');
+            this.reset();
+        });
+    }
+
+    // Scroll indicator animation
+    window.addEventListener('scroll', function () {
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            if (window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '1';
+            }
+        }
+    });
+</script>

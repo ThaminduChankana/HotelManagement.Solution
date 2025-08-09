@@ -1,0 +1,315 @@
+@page "/RoomList"
+@model HotelTool.Web.Pages.Rooms.RoomListModel
+@{
+    ViewData["Title"] = "Room List";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+<link rel="stylesheet" href="~/css/roomlist.css" asp-append-version="true" />
+
+
+<div class="container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    <h2>Available Rooms</h2>
+
+    @if (Model.IsAdmin)
+    {
+        <a asp-page="../CreateRoom/Create" class="add-room-btn">
+            <i class="fas fa-plus"></i> Add New Room
+        </a>
+    }
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Room Type</th>
+                    <th>Guests</th>
+                    <th>Today's Price</th>
+                    <th>Facilities</th>
+                    <th>Your Options</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model.Rooms)
+                {
+                    var safeId = $"room_{room.Id}";
+                    <tr>
+                        <td>
+                            <a href="#" onclick="openRoomModal('@room.Id')" class="room-name">@room.Name</a>
+                            @if (Model.IsAdmin)
+                            {
+                                <div class="admin-actions">
+                                    <a asp-page="../EditRoom/Edit" asp-route-id="@room.Id" class="edit-btn">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="#" class="delete-btn" onclick="confirmDelete('@room.Id', '@room.Name')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <div class="guest-icons">
+                                @for (int i = 0; i < room.NumberOfGuests; i++)
+                                {
+                                    <i class="fas fa-user"></i>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-container">
+                                @if (room.NormalRoomAfterDiscount < room.NormalRoomPrice)
+                                {
+                                    <div class="current-price">LKR @room.NormalRoomAfterDiscount.ToString("N0")</div>
+                                    <div class="original-price">LKR @room.NormalRoomPrice.ToString("N0")</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.8);">
+                                        <em>Includes taxes and charges</em>
+                                    </div>
+                                    <div class="discount-badge">@room.Discount% off</div>
+                                }
+                                else
+                                {
+                                    <div class="current-price">LKR @room.Price.ToString("N0")</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.8);">
+                                        <em>Includes taxes and charges</em>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="features-list">
+                                @foreach (var feature in room.Features)
+                                {
+                                    <li>
+                                        @switch (feature.ToLower())
+                                        {
+                                            case var f when f.Contains("air"):
+                                                <i class="fa fa-fan"></i>
+                                                break;
+                                            case var f when f.Contains("tv"):
+                                                <i class="fa fa-tv"></i>
+                                                break;
+                                            case var f when f.Contains("wifi"):
+                                                <i class="fas fa-wifi"></i>
+                                                break;
+                                            case var f when f.Contains("soundproof"):
+                                                <i class="fa fa-volume-off"></i>
+                                                break;
+                                            case var f when f.Contains("private bathroom"):
+                                                <i class="fas fa-bath"></i>
+                                                break;
+                                            case var f when f.Contains("m²") || f.Contains("sqm") || f.Contains("square"):
+                                                <i class="fas fa-ruler-combined"></i>
+                                                break;
+                                            case var f when f.Contains("airport"):
+                                                <i class="fa fa-plane"></i>
+                                                break;
+                                            default:
+                                                <i class="fas fa-check" style="color: #27ae60;"></i>
+                                                break;
+                                        }
+                                        <span>@feature</span>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="options-list">
+                                @foreach (var option in room.Options)
+                                {
+                                    <li>
+                                        @switch (option.ToLower())
+                                        {
+                                            case var o when o.Contains("breakfast"):
+                                                <i class="fas fa-utensils"></i>
+                                                break;
+                                            case var o when o.Contains("free cancellation"):
+                                                <i class="fas fa-ban" style="color: #27ae60;"></i>
+                                                break;
+                                            case var o when o.Contains("non-refundable"):
+                                                <i class="fas fa-times-circle" style="color: #e74c3c;"></i>
+                                                break;
+                                            case var o when o.Contains("pay"):
+                                                <i class="fa fa-credit-card-alt"></i>
+                                                break;
+                                            case var o when o.Contains("parking"):
+                                                <i class="fas fa-parking"></i>
+                                                break;
+                                            default:
+                                                <i class="fas fa-check" style="color: #27ae60;"></i>
+                                                break;
+                                        }
+                                        <span>@option</span>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="slideshow-container">
+                                <div class="image-wrapper" id="slide-@room.Id">
+                                    <img src="@room.ImageUrls.FirstOrDefault()" class="slide-image" />
+                                </div>
+                                @if (room.ImageUrls.Count > 1)
+                                {
+                                    <button class="prev-btn" onclick="prevSlide('@room.Id')">&#10094;</button>
+                                    <button class="next-btn" onclick="nextSlide('@room.Id')">&#10095;</button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Room Detail Modal -->
+@if (!Model.IsAdmin)
+{
+    <div id="roomModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRoomModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div class="modal-slider-container">
+                <img id="modalImage" src="" class="slide-image" />
+                <button class="prev-btn" onclick="modalPrev()">&#10094;</button>
+                <button class="next-btn" onclick="modalNext()">&#10095;</button>
+            </div>
+            <div id="modalBody" style="margin-top: 15px;"></div>
+
+
+            <a id="reserveRoomBtn" href="#" class="reserve-btn">
+                <i class="fas fa-calendar-check"></i> Reserve Room
+            </a>
+
+
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h3>Confirm Deletion</h3>
+        <p>Are you sure you want to delete <strong id="deleteRoomName"></strong>?</p>
+        <form method="post" asp-page-handler="Delete">
+            <input type="hidden" name="RoomId" id="deleteRoomId" />
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize slide data for all rooms
+        window.slides = {};
+        let modalCurrentIndex = 0;
+        let modalImages = [];
+
+                                    @foreach (var room in Model.Rooms)
+            {
+                <text>
+                    window.slides["@room.Id"] = {
+                        images: [@Html.Raw(string.Join(",", room.ImageUrls.Select(url => $"'{url}'")))],
+                    currentIndex: 0,
+                    name: "@room.Name",
+                    price: "@room.NormalRoomPrice.ToString("N0")",
+                    discountPrice: "@room.NormalRoomAfterDiscount.ToString("N0")",
+                    discount: "@room.Discount",
+                    guests: "@room.NumberOfGuests",
+                    features: [@Html.Raw(string.Join(",", room.Features.Select(f => $"'{f}'")))],
+                    options: [@Html.Raw(string.Join(",", room.Options.Select(o => $"'{o}'")))]
+                                                                        };
+                </text>
+        }
+            // Slideshow logic
+            function updateSlide(id) {
+                const slide = window.slides[id];
+                const wrapper = document.getElementById("slide-" + id);
+                if (wrapper && slide) {
+                    wrapper.querySelector("img").src = slide.images[slide.currentIndex];
+                }
+            }
+
+        function nextSlide(id) {
+            const slide = window.slides[id];
+            if (!slide) return;
+            slide.currentIndex = (slide.currentIndex + 1) % slide.images.length;
+            updateSlide(id);
+        }
+
+        function prevSlide(id) {
+            const slide = window.slides[id];
+            if (!slide) return;
+            slide.currentIndex = (slide.currentIndex - 1 + slide.images.length) % slide.images.length;
+            updateSlide(id);
+        }
+        // Open modal with room details
+        function openRoomModal(id) {
+            const data = window.slides[id];
+            if (!data) return;
+            modalImages = data.images;
+            modalCurrentIndex = 0;
+            document.getElementById("modalImage").src = modalImages[0];
+            document.getElementById("modalTitle").innerText = data.name;
+
+            const priceDisplay = data.discountPrice !== data.price ?
+                `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.discountPrice}</span> 
+                                             <span style="text-decoration:line-through; color: rgba(255,255,255,0.6);">LKR ${data.price}</span>` :
+                `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.price}</span>`;
+
+            document.getElementById("modalBody").innerHTML = `
+                                            <p><strong>Price:</strong> ${priceDisplay}</p>
+                                            <p><strong>Guests:</strong> ${data.guests} person(s)</p>
+                                            <p><strong>Features:</strong></p>
+                                            <ul style="margin-left: 20px;">${data.features.map(f => `<li style="margin-bottom: 5px;">${f}</li>`).join('')}</ul>
+                                            <p><strong>Options:</strong></p>
+                                            <ul style="margin-left: 20px;">${data.options.map(o => `<li style="margin-bottom: 5px;">${o}</li>`).join('')}</ul>
+                                        `;
+            const reserveBtn = document.getElementById("reserveRoomBtn");
+            reserveBtn.href = `../../Reservations/User/ReserveRoom/CreateReservation?roomTypeId=${id}`;
+
+            document.getElementById("roomModal").style.display = "block";
+        }
+
+        function closeRoomModal() {
+            document.getElementById("roomModal").style.display = "none";
+        }
+
+        function modalNext() {
+            modalCurrentIndex = (modalCurrentIndex + 1) % modalImages.length;
+            document.getElementById("modalImage").src = modalImages[modalCurrentIndex];
+        }
+
+        function modalPrev() {
+            modalCurrentIndex = (modalCurrentIndex - 1 + modalImages.length) % modalImages.length;
+            document.getElementById("modalImage").src = modalImages[modalCurrentIndex];
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (e) {
+            if (e.target.id === "roomModal") closeRoomModal();
+        };
+
+        // Delete confirmation
+        function confirmDelete(roomId, roomName) {
+            document.getElementById("deleteRoomName").textContent = roomName;
+            document.getElementById("deleteRoomId").value = roomId;
+            document.getElementById("deleteModal").style.display = "block";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+    </script>
+}

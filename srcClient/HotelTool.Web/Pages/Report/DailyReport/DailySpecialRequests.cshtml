@@ -1,0 +1,101 @@
+@page
+@model HotelTool.Web.Pages.Reports.DailySpecialRequestsModel
+@{
+    ViewData["Title"] = "Daily Special Request Report";
+}
+
+<link rel="stylesheet" href="~/css/daily-report.css" asp-append-version="true" />
+
+<div class="container">
+    <h2>📝 Daily Special Requests</h2>
+
+    <div class="week-info">
+        <strong>📅 Selected Date:</strong> @Model.SelectedDate.ToString("MMM dd, yyyy")
+        (@Model.SelectedDate.ToString("dddd"))
+        <br>
+        <strong>📋 Total Requests:</strong> @Model.Requests.Count
+
+    </div>
+
+    <div class="action-buttons">
+        <form method="get" class="week-selector">
+            <label for="selectedDate">Select Date:</label>
+            <input type="date" id="selectedDate" name="selectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")"
+                class="form-control" onchange="this.form.submit()" />
+
+            @if (Model.Requests.Any())
+            {
+                <button type="button" class="btn btn-export" onclick="exportToPDF()">
+                    🖨️ Export to PDF
+                </button>
+            }
+        </form>
+
+
+    </div>
+
+    @if (!Model.Requests.Any())
+    {
+        <div class="alert alert-info">
+            No special requests found for the selected day.
+        </div>
+    }
+    else
+    {
+        <div class="table-container" id="reportContent">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>👤 Guest Name</th>
+                        <th>📞 Phone Number</th>
+                        <th>🏠 Room Type</th>
+                        <th>🚪 Room Number</th>
+                        <th>📝 Special Request</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model.Requests)
+                    {
+                        <tr>
+                            <td>
+                                <div class="guest-name">@request.GuestName</div>
+                            </td>
+                            <td>
+                                <div class="phone-cell">@request.Phone</div>
+                            </td>
+                            <td>
+                                <div class="room-type">@request.RoomType</div>
+                            </td>
+                            <td>
+                                <div class="room-number-cell">
+                                    @if (!string.IsNullOrEmpty(request.AllocatedRoomNumber))
+                                    {
+                                        <span class="room-number">@request.AllocatedRoomNumber</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="no-room">Not Assigned</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="special-request-cell">
+                                    @request.SpecialRequest
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script>
+    // Export the PDF
+    function exportToPDF() {
+        const selectedDate = document.getElementById("selectedDate").value;
+        window.location.href = `/Report/DailyReport/DailySpecialRequests?handler=ExportPdf&selectedDate=${selectedDate}`;
+    }
+
+</script>

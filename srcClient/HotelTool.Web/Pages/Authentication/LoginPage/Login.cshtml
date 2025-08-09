@@ -1,0 +1,47 @@
+@page
+@model HotelTool.Web.Pages.LoginModel
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="title"><span>Welcome Back</span></div>
+    <form method="post">
+      @if (!ViewData.ModelState.IsValid)
+      {
+        <div class="error-messages">
+          @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+          {
+            <div>@error.ErrorMessage</div>
+          }
+        </div>
+      }
+
+      <div class="row">
+        <i class="fas fa-user"></i>
+        <input asp-for="Username" placeholder="Username" required />
+      </div>
+      <div class="row">
+        <i class="fas fa-lock"></i>
+        <input asp-for="Password" placeholder="Password" type="password" required />
+      </div>
+      <div class="row button">
+        <input type="submit" value="Login" />
+      </div>
+      <div class="signup-link">
+        Not a member? <a href="../RegisterPage/Register">Signup now</a>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

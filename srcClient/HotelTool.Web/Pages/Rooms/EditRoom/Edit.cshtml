@@ -1,0 +1,163 @@
+@page "{id:guid}"
+@model HotelTool.Web.Pages.Rooms.EditModel
+@{
+    ViewData["Title"] = "Edit Room";
+}
+<link rel="stylesheet" href="~/css/edit-room.css" asp-append-version="true" />
+<div class="container">
+    <h2>Edit Room</h2>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <form method="post" enctype="multipart/form-data" class="room-form">
+        <input type="hidden" asp-for="Room.Id" />
+
+        <div class="form-group">
+            <label asp-for="Room.Name">Room Type:</label>
+            <input asp-for="Room.Name" required placeholder="Enter room name" />
+            <span asp-validation-for="Room.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.NumberOfGuests">Number of Guests:</label>
+            <input asp-for="Room.NumberOfGuests" type="number" min="1" required placeholder="Maximum guests allowed" />
+            <span asp-validation-for="Room.NumberOfGuests" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.TotalRooms">Number of Rooms:</label>
+            <input asp-for="Room.TotalRooms" type="number" min="1" required placeholder="Total rooms of this type" />
+            <span asp-validation-for="Room.TotalRooms" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Room Numbers:</label>
+            <div id="roomNumbersContainer">
+                @for (int i = 0; i < Model.Room.RoomNumbers.Count; i++)
+                {
+                    <input type="text" name="RoomNumbers" value="@Model.Room.RoomNumbers[i]" class="room-number-input"
+                        placeholder="Room Number @(i + 1)" />
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.BreakfastPrice">Breakfast Price:</label>
+            <input asp-for="Room.BreakfastPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.BreakfastPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.LunchPrice">Lunch Price:</label>
+            <input asp-for="Room.LunchPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.LunchPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.DinnerPrice">Dinner Price:</label>
+            <input asp-for="Room.DinnerPrice" type="number" min="1000" required placeholder="Price in LKR" />
+            <span asp-validation-for="Room.DinnerPrice" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.Price">Room Price:</label>
+            <input asp-for="Room.Price" type="number" step="0.01" min="0" required
+                placeholder="Price per night in LKR" />
+            <span asp-validation-for="Room.Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Room.Discount">Discount (%):</label>
+            <input asp-for="Room.Discount" type="number" step="0.01" min="0" max="100"
+                placeholder="Optional discount percentage" />
+            <span asp-validation-for="Room.Discount" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Room Features:</label>
+            <select asp-for="SelectedFeatures" asp-items="Model.AllFeatures" multiple></select>
+        </div>
+
+        <div class="form-group">
+            <label>Booking Options:</label>
+            <select asp-for="SelectedOptions" asp-items="Model.AllOptions" multiple></select>
+        </div>
+
+        <div class="form-group">
+            <label>Current Images:</label>
+            <div class="current-images-container">
+                @foreach (var image in Model.Room.ImageUrls)
+                {
+                    <div class="image-item">
+                        <img class="selected-images" src="@image" alt="Room Image" />
+                        <div class="delete-section">
+                            <input type="checkbox" name="ImagesToDelete" value="@image" id="delete_@image.GetHashCode()" />
+                            <label for="delete_@image.GetHashCode()">Remove</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UploadedImages">Upload New Images:</label>
+            <input asp-for="UploadedImages" type="file" multiple accept="image/*" />
+            <span asp-validation-for="UploadedImages" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <a asp-page="../ListRoom/RoomList" class="btn-cancel">
+                <i class="fas fa-arrow-left"></i> Cancel
+            </a>
+            <button type="submit">
+                <i class="fas fa-save"></i> Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Get references to room count input and container
+        const totalRoomsInput = document.querySelector('#Room_TotalRooms');
+        const roomNumbersContainer = document.getElementById('roomNumbersContainer');
+
+        // Dynamically regenerate room number input fields based on room count
+        function updateRoomNumberInputs(count) {
+            roomNumbersContainer.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'RoomNumbers';
+                input.className = 'room-number-input';
+                input.placeholder = `Room Number ${i + 1}`;
+                roomNumbersContainer.appendChild(input);
+            }
+        }
+
+        // When total room count changes, regenerate inputs
+        totalRoomsInput.addEventListener('input', () => {
+            const value = parseInt(totalRoomsInput.value);
+            if (!isNaN(value) && value > 0) {
+                updateRoomNumberInputs(value);
+            }
+        });
+
+        // On page load, ensure the correct number of inputs are displayed and filled
+        window.addEventListener('load', () => {
+            const initialCount = parseInt(totalRoomsInput.value);
+            if (!isNaN(initialCount) && initialCount > 0 && roomNumbersContainer.children.length !== initialCount) {
+                updateRoomNumberInputs(initialCount);
+                // Load existing room number values into newly generated inputs
+                const existingValues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RoomNumbers));
+                if (existingValues && existingValues.length === initialCount) {
+                    const inputs = document.querySelectorAll('.room-number-input');
+                    inputs.forEach((input, i) => {
+                        input.value = existingValues[i];
+                    });
+                }
+            }
+        });
+    </script>
+}

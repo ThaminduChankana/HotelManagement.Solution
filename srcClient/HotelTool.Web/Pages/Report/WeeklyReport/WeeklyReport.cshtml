@@ -1,0 +1,278 @@
+@page
+@model HotelTool.Web.Pages.Reports.WeeklyReportModel
+@{
+    ViewData["Title"] = "Weekly Booking Report";
+}
+
+<link rel="stylesheet" href="~/css/weekly-report.css" asp-append-version="true" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<div class="container">
+    <h2>Weekly Booking Report</h2>
+
+    <div class="week-info">
+        <strong>📅 Week:</strong> @Model.StartOfWeek.ToShortDateString() - @Model.EndOfWeek.ToShortDateString()
+        <br>
+        <strong>💰 Total Weekly Income:</strong> LKR @Model.TotalWeeklyIncome.ToString("N2")
+    </div>
+
+    @if (!Model.DailySummaries.Any())
+    {
+        <div class="alert alert-info">
+            No bookings found for this week.
+        </div>
+    }
+    else
+    {
+        <form method="get" class="week-selector">
+            <label for="weekStartDate">Select Week Starting From:</label>
+            <input type="date" id="weekStartDate" name="weekStartDate" value="@Model.StartOfWeek.ToString("yyyy-MM-dd")"
+                class="form-control" />
+            <button type="submit" class="btn btn-primary">View Report</button>
+            <button type="button" class="btn btn-export" onclick="exportWeeklyTableToPDF()">
+                🖨️ Export to PDF
+            </button>
+        </form>
+
+        <div class="chart-container">
+            <h3>💰 Daily Income Overview</h3>
+            <div class="chart-wrapper">
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3>📊 Daily Bookings Overview</h3>
+            <div class="chart-wrapper">
+                <canvas id="bookingsChart"></canvas>
+            </div>
+        </div>
+
+
+
+        <div class="table-container" id="reportTable">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>📅 Date</th>
+                        <th>📊 Number of Bookings</th>
+                        <th>💰 Daily Income</th>
+                        <th>📝 Special Requests</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var day in Model.DailySummaries)
+                    {
+                        <tr>
+                            <td>
+                                <div class="date-cell">@day.Date.ToString("MMM dd, yyyy")</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                                    @day.Date.ToString("dddd")
+                                </div>
+                            </td>
+                            <td>
+                                <div class="booking-count @(day.BookingCount == 0 ? "zero" : "")">
+                                    @day.BookingCount
+                                </div>
+                            </td>
+                            <td>
+                                <div class="income-amount @(day.DailyIncome == 0 ? "zero" : "")">
+                                    LKR @day.DailyIncome.ToString("N2")
+                                </div>
+                            </td>
+                            <td>
+                                @if (day.RequestsWithRoomNumbers.Any())
+                                {
+                                    <ul class="requests-list">
+                                        @foreach (var item in day.RequestsWithRoomNumbers)
+                                        {
+                                            <li>
+                                                @item.SpecialRequest
+                                                @if (!string.IsNullOrEmpty(item.RoomNumber))
+                                                {
+                                                    <span class="room-number">Room: @item.RoomNumber</span>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="no-requests">No special requests</div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white',
+                        font: {
+                            size: 14,
+                            weight: '500'
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        };
+
+        const dates = @Html.Raw(Json.Serialize(Model.DailySummaries.Select(d => d.Date.ToString("MMM dd")).ToArray()));
+        const incomeData = @Html.Raw(Json.Serialize(Model.DailySummaries.Select(d => d.DailyIncome).ToArray()));
+        const bookingData = @Html.Raw(Json.Serialize(Model.DailySummaries.Select(d => d.BookingCount).ToArray()));
+
+        const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+        new Chart(incomeCtx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Daily Income (LKR )',
+                    data: incomeData,
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#2ecc71',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    ...chartOptions.scales,
+                    y: {
+                        ...chartOptions.scales.y,
+                        ticks: {
+                            ...chartOptions.scales.y.ticks,
+                            callback: function (value) {
+                                return 'LKR ' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+        new Chart(bookingsCtx, {
+            type: 'bar',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Number of Bookings',
+                    data: bookingData,
+                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                    borderColor: '#3498db',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    ...chartOptions.scales,
+                    y: {
+                        ...chartOptions.scales.y,
+                        beginAtZero: true,
+                        ticks: {
+                            ...chartOptions.scales.y.ticks,
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    });
+    function exportWeeklyTableToPDF() {
+        const tableContent = document.getElementById('reportTable').innerHTML;
+
+        const printWindow = window.open('', '', 'width=900,height=700');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Weekly Report Table</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 40px;
+                            font-size: 12px;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid #000;
+                            padding: 6px 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background: #eee;
+                        }
+                        h2 {
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>Weekly Booking Report Table</h2>
+                    ${tableContent}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+
+        printWindow.print();
+
+        printWindow.onafterprint = function () {
+            printWindow.close();
+        };
+
+        setTimeout(() => {
+            if (!printWindow.closed) {
+                printWindow.close();
+            }
+        }, 1000);
+    }
+</script>

@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] LuxuryStay</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+    @{
+        var isAuthenticated = Context.Session.GetString("Username") != null;
+        var isAdmin = Context.Session.GetString("Role") == "Admin";
+        var isUser = Context.Session.GetString("Role") == "User";
+        var username = Context.Session.GetString("Username") ?? "Guest";
+    }
+
+    <!-- Background overlay -->
+    <div class="background-overlay"></div>
+    @if (isAuthenticated)
+    {
+        <header class="main-header">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <!-- Brand Logo -->
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">
+                        <i class="fas fa-hotel"></i>
+                        <span class="brand-text">LuxuryStay</span>
+                    </a>
+
+                    <!-- Mobile Toggle Button -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon">
+                            <i class="fas fa-bars"></i>
+                        </span>
+                    </button>
+
+                    <!-- Navigation Menu -->
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-page="/Index">
+                                    <i class="fas fa-home"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" asp-page="/Rooms/ListRoom/RoomList">
+                                    <i class="fas fa-bed"></i>
+                                    <span>Rooms</span>
+                                </a>
+                            </li>
+                            @if (isUser)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" asp-page="/Reservations/User/ReservationList/AllReservations">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>Reservations</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" asp-page="/Reservations/Admin/AdminReservationList/AdminReservationList">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>All Reservations</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" asp-page="/Report/WeeklyReport/WeeklyReport">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>Reports</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isUser)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" asp-page="/ChatBot/ChatBot">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>Chat Bot</span>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" asp-page="/Authentication/LogoutPage/Logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- User Menu -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span class="user-name">@username</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+
+    <main class="main-content">
+        <div class="container-fluid">
+            @RenderBody()
+        </div>
+    </main>
+
+    @if (isAuthenticated)
+    {
+        <footer class="main-footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5 class="footer-title">
+                                <i class="fas fa-hotel"></i>
+                                LuxuryStay
+                            </h5>
+                            <p class="footer-description">
+                                Complete hotel management solution designed for modern hospitality businesses.
+                                Streamline operations and enhance guest experiences.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://facebook.com" class="social-link" target="_blank"><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a href="https://twitter.com" class="social-link" target="_blank"><i
+                                        class="fab fa-twitter"></i></a>
+                                <a href="https://instagram.com" class="social-link" target="_blank"><i
+                                        class="fab fa-instagram"></i></a>
+                                <a href="https://linkedin.com" class="social-link" target="_blank"><i
+                                        class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Quick Links</h6>
+                            <ul class="footer-links">
+                                <li><a asp-area="" asp-page="/Index"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+                                <li><a asp-page="/Rooms/ListRoom/RoomList"><i class="fas fa-chevron-right"></i> Rooms</a>
+                                </li>
+                                @if (isUser)
+                                {
+                                    <li><a asp-page="/Reservations/User/ReservationList/AllReservations"><i class="fas fa-chevron-right"></i>
+                                            Bookings</a></li>
+                                }
+                                @if (isAdmin)
+                                {
+                                    <li><a asp-page="/Reservations/Admin/AdminReservationList/AdminReservationList"><i
+                                                class="fas fa-chevron-right"></i> Bookings</a></li>
+                                }
+                                @if (isUser)
+                                {
+                                    <li><a asp-page="/ChatBot/ChatBot"><i class="fas fa-chevron-right"></i>Chat Bot</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Support</h6>
+                            <ul class="footer-links">
+                                <li><a href="/Index"><i class="fas fa-chevron-right"></i> Help Center</a></li>
+                                <li><a href="/Index"><i class="fas fa-chevron-right"></i> Documentation</a></li>
+                                <li><a asp-area="" asp-page="/Index"><i class="fas fa-chevron-right"></i> Privacy
+                                        Policy</a></li>
+                                <li><a href="/Index"><i class="fas fa-chevron-right"></i> Contact Support</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="copyright">
+                                &copy; 2025 LuxuryStay. All rights reserved.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="footer-meta">
+                                <span class="version">Version 2.1.0</span>
+                                <span class="separator">|</span>
+                                <span class="build">Build 2025.01</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

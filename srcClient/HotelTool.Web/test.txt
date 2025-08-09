@@ -1,0 +1,11 @@
+<Users>
+  <User>
+    <Id>guid</Id>
+    <Username>string</Username>
+    <Email>string</Email>
+    <Password>hashed_password</Password>
+    <Role>Admin|User</Role>
+    <CreatedAt>datetime</CreatedAt>
+    <IsActive>boolean</IsActive>
+  </User>
+</Users>

@@ -1,0 +1,231 @@
+@page
+@model HotelTool.Web.Pages.Reservations.CreateReservationModel
+@{
+    ViewData["Title"] = "Create Reservation";
+}
+<link rel="stylesheet" href="~/css/create-reservation.css" asp-append-version="true" />
+
+<div class="container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    <h2>Reserve Room</h2>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form method="post" class="reservation-form">
+
+
+        <div class="section-header">Guest Information</div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label asp-for="Reservation.FirstName">First Name</label>
+                <input asp-for="Reservation.FirstName" placeholder="Enter first name" required />
+                <span asp-validation-for="Reservation.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.LastName">Last Name</label>
+                <input asp-for="Reservation.LastName" placeholder="Enter last name" required />
+                <span asp-validation-for="Reservation.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.Email">Email Address</label>
+                <input asp-for="Reservation.Email" type="email" placeholder="Enter email address" required />
+                <span asp-validation-for="Reservation.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.PhoneNumber">Phone Number</label>
+                <input asp-for="Reservation.PhoneNumber" type="tel" placeholder="Enter phone number" required />
+                <span asp-validation-for="Reservation.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.Country">Country</label>
+                <input asp-for="Reservation.Country" placeholder="Enter country" required />
+                <span asp-validation-for="Reservation.Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.BookFor">Booking For</label>
+                <select asp-for="Reservation.BookFor" required>
+                    <option value="">-- Select Booking Type --</option>
+                    <option value="Myself">Myself</option>
+                    <option value="Family">Family</option>
+                    <option value="Friends">Friends</option>
+                    <option value="Business/Corporate">Business/Corporate</option>
+                    <option value="Group Booking">Group Booking</option>
+                    <option value="Wedding Party">Wedding Party</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Reservation.BookFor" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label asp-for="Reservation.RoomTypeId">Room Type</label>
+                <select asp-for="Reservation.RoomTypeId" asp-items="Model.RoomTypes" readonly disabled>
+                    <option value="">-- Select Room Type --</option>
+                </select>
+                <input type="hidden" asp-for="Reservation.RoomTypeId" />
+                <span asp-validation-for="Reservation.RoomTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.CheckInDate">Check-in Date</label>
+                <input asp-for="Reservation.CheckInDate" type="date" id="checkIn" required />
+                <span asp-validation-for="Reservation.CheckInDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.CheckOutDate">Check-out Date</label>
+                <input asp-for="Reservation.CheckOutDate" type="date" id="checkOut" required />
+                <span asp-validation-for="Reservation.CheckOutDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.FullOrHalfBoard">Board Type</label>
+                <select asp-for="Reservation.FullOrHalfBoard" id="boardType">
+                    <option value="">-- Select Board Type --</option>
+                    <option value="Full Board">Full Board (Breakfast, Lunch, Dinner)</option>
+                    <option value="Half Board">Half Board (Breakfast + One Meal)</option>
+                </select>
+                <span asp-validation-for="Reservation.FullOrHalfBoard" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.PayBy">Payment Method</label>
+                <select asp-for="Reservation.PayBy" required>
+                    <option value="">-- Select Payment Method --</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Online Payment">Online Payment</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Mobile Payment">Mobile Payment</option>
+                    <option value="Pay at Hotel">Pay at Hotel</option>
+                </select>
+                <span asp-validation-for="Reservation.PayBy" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.IsWorkRelated">Work Related</label>
+                <div class="checkbox-group">
+                    <input asp-for="Reservation.IsWorkRelated" type="checkbox" />
+                    <label for="Reservation_IsWorkRelated">This is a work-related booking</label>
+                </div>
+                <span asp-validation-for="Reservation.IsWorkRelated" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label asp-for="Reservation.SpecialRequest">Special Requests</label>
+            <input asp-for="Reservation.SpecialRequest" placeholder="Any special requests or notes..." />
+            <span asp-validation-for="Reservation.SpecialRequest" class="text-danger"></span>
+        </div>
+
+        <div class="recurrence-section">
+            <h4 style="color: white; margin-bottom: 20px; font-weight: 500;">Recurring Reservation</h4>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="form-group">
+                    <label asp-for="Reservation.Recurrence">Recurrence Type</label>
+                    <select asp-for="Reservation.Recurrence" id="recurrenceType">
+                        <option value="None">No Recurrence</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                    <span asp-validation-for="Reservation.Recurrence" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reservation.RecurrenceCount">Repeat Count</label>
+                    <input asp-for="Reservation.RecurrenceCount" type="number" min="1" max="50"
+                        placeholder="How many times to repeat?" id="recurrenceCount" disabled />
+                    <span asp-validation-for="Reservation.RecurrenceCount" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-calendar-check"></i> Create Reservation
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Disable board type if stay duration > 1 day
+        function updateBoardTypeVisibility() {
+            const checkInDate = new Date(document.getElementById("checkIn").value);
+            const checkOutDate = new Date(document.getElementById("checkOut").value);
+            const boardDropdown = document.getElementById("boardType");
+
+            if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
+                const timeDiff = checkOutDate.getTime() - checkInDate.getTime();
+                const dayDiff = timeDiff / (1000 * 3600 * 24);
+
+                // Disable board dropdown for multi-day stays
+                if (dayDiff > 1) {
+                    boardDropdown.disabled = true;
+                    boardDropdown.value = "";
+                } else {
+                    boardDropdown.disabled = false;
+                }
+            } else {
+                boardDropdown.disabled = false;
+            }
+        }
+
+        document.getElementById("checkIn").addEventListener("change", updateBoardTypeVisibility);
+        document.getElementById("checkOut").addEventListener("change", updateBoardTypeVisibility);
+        window.onload = updateBoardTypeVisibility;
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("checkIn").min = today;
+        document.getElementById("checkOut").min = today;
+
+        // Update checkout minimum when checkin changes
+        document.getElementById("checkIn").addEventListener("change", function () {
+            const checkInDate = this.value;
+            if (checkInDate) {
+                const nextDay = new Date(checkInDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                document.getElementById("checkOut").min = nextDay.toISOString().split('T')[0];
+            }
+        });
+
+        // Handle recurrence count field enabling/disabling
+        function updateRecurrenceCountField() {
+            const recurrenceType = document.getElementById("recurrenceType").value;
+            const recurrenceCountField = document.getElementById("recurrenceCount");
+
+            if (recurrenceType === "None" || recurrenceType === "") {
+                recurrenceCountField.disabled = true;
+                recurrenceCountField.value = "";
+                recurrenceCountField.style.opacity = "0.5";
+            } else {
+                recurrenceCountField.disabled = false;
+                recurrenceCountField.style.opacity = "1";
+                if (!recurrenceCountField.value) {
+                    recurrenceCountField.value = "1"; // Default to 1 when enabled
+                }
+            }
+        }
+
+        // Add event listener for recurrence type changes
+        document.getElementById("recurrenceType").addEventListener("change", updateRecurrenceCountField);
+
+        // Initialize recurrence count field state on page load
+        updateRecurrenceCountField();
+    </script>
+}

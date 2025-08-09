@@ -1,0 +1,50 @@
+@page
+@model HotelTool.Web.Pages.RegisterModel
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="title"><span>Create Account</span></div>
+    <form method="post">
+      @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+      {
+        <div style="color: red; margin-bottom: 10px;">
+          @Model.ErrorMessage
+        </div>
+      }
+
+      <div class="row">
+        <i class="fas fa-user"></i>
+        <input asp-for="Username" placeholder="Username" />
+      </div>
+      <div class="row">
+        <i class="fas fa-envelope"></i>
+        <input asp-for="Email" type="email" placeholder="Email" required />
+      </div>
+      <div class="row">
+        <i class="fas fa-lock"></i>
+        <input asp-for="Password" type="password" placeholder="Password" />
+      </div>
+      <div class="row">
+        <i class="fas fa-lock"></i>
+        <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" />
+      </div>
+      <div class="row button">
+        <input type="submit" value="Register" />
+      </div>
+      <div class="signup-link">Already a member? <a href="../LoginPage/Login">Login</a></div>
+    </form>
+  </div>
+</body>
+
+</html>
