@@ -149,6 +149,8 @@ public class EditReservationModel : PageModel
             // Serialize and send PUT request to update the reservation
             var json = JsonSerializer.Serialize(updateRequest, _jsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // API call to update a reservation
             var response = await client.PutAsync($"/api/reservation/{Reservation.Id}", content);
 
             if (response.IsSuccessStatusCode)

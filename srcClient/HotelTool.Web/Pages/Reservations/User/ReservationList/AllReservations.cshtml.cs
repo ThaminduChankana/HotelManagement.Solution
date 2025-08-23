@@ -41,6 +41,8 @@ namespace HotelTool.Web.Pages.Reservations
             try
             {
                 var client = _httpClientFactory.CreateClient("ReservationServiceAPI");
+
+                // API call to get the reservations of the logged in user
                 var response = await client.GetAsync($"/api/reservation/user/{userId}");
 
                 if (response.IsSuccessStatusCode)
@@ -71,6 +73,8 @@ namespace HotelTool.Web.Pages.Reservations
             try
             {
                 var client = _httpClientFactory.CreateClient("ReservationServiceAPI");
+
+                // API call to cancel a reservation
                 var response = await client.PatchAsync($"/api/reservation/{id}/cancel", null);
 
                 if (response.IsSuccessStatusCode)

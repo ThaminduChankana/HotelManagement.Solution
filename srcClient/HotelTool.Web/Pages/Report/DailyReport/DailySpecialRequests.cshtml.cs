@@ -107,6 +107,8 @@ public class DailySpecialRequestsModel : PageModel
     private async Task<List<Reservation>> GetReservationsAsync()
     {
         var client = _httpClientFactory.CreateClient("ReservationServiceAPI");
+
+        // API call to get the reservation details to generate the daily report
         var response = await client.GetAsync("/api/reservation");
 
         if (response.IsSuccessStatusCode)

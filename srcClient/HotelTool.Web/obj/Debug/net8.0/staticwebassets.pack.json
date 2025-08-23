@@ -1,0 +1,337 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/obj/Debug/net8.0/scopedcss/projectbundle/HotelTool.Web.bundle.scp.css",
+      "PackagePath": "staticwebassets/HotelTool.Web.bundle.scp.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/Register.cshtml.cs",
+      "PackagePath": "staticwebassets/css/Register.cshtml.cs"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/admin-reservation-list.css",
+      "PackagePath": "staticwebassets/css/admin-reservation-list.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/chatbot.css",
+      "PackagePath": "staticwebassets/css/chatbot.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/create-reservation.css",
+      "PackagePath": "staticwebassets/css/create-reservation.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/create-room.css",
+      "PackagePath": "staticwebassets/css/create-room.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/customer-home.css",
+      "PackagePath": "staticwebassets/css/customer-home.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/customer-reservation-list.css",
+      "PackagePath": "staticwebassets/css/customer-reservation-list.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/daily-report.css",
+      "PackagePath": "staticwebassets/css/daily-report.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/edit-reservation.css",
+      "PackagePath": "staticwebassets/css/edit-reservation.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/edit-room.css",
+      "PackagePath": "staticwebassets/css/edit-room.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/layout.css",
+      "PackagePath": "staticwebassets/css/layout.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/login.css",
+      "PackagePath": "staticwebassets/css/login.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/roomlist.css",
+      "PackagePath": "staticwebassets/css/roomlist.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/site.css",
+      "PackagePath": "staticwebassets/css/site.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/css/weekly-report.css",
+      "PackagePath": "staticwebassets/css/weekly-report.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/favicon.ico",
+      "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/js/layout.js",
+      "PackagePath": "staticwebassets/js/layout.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/js/site.js",
+      "PackagePath": "staticwebassets/js/site.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/LICENSE",
+      "PackagePath": "staticwebassets/lib/bootstrap"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.rtl.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.bundle.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.esm.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.esm.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.esm.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map",
+      "PackagePath": "staticwebassets/lib/bootstrap/dist/js/bootstrap.min.js.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt",
+      "PackagePath": "staticwebassets/lib/jquery-validation-unobtrusive/LICENSE.txt"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation/LICENSE.md",
+      "PackagePath": "staticwebassets/lib/jquery-validation/LICENSE.md"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation/dist/additional-methods.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation/dist/additional-methods.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation/dist/additional-methods.min.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation/dist/additional-methods.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation/dist/jquery.validate.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation/dist/jquery.validate.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery-validation/dist/jquery.validate.min.js",
+      "PackagePath": "staticwebassets/lib/jquery-validation/dist/jquery.validate.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/LICENSE.txt",
+      "PackagePath": "staticwebassets/lib/jquery/LICENSE.txt"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.js",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.min.js",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.min.map",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.min.map"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.slim.js",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.slim.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.slim.min.js",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.slim.min.js"
+    },
+    {
+      "Id": "/Users/chathurikadombepola/Documents/IIT Mail Azure Account/srcClient/HotelTool.Web/wwwroot/lib/jquery/dist/jquery.slim.min.map",
+      "PackagePath": "staticwebassets/lib/jquery/dist/jquery.slim.min.map"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.HotelTool.Web.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.HotelTool.Web.props",
+      "PackagePath": "build\\HotelTool.Web.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.HotelTool.Web.props",
+      "PackagePath": "buildMultiTargeting\\HotelTool.Web.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.HotelTool.Web.props",
+      "PackagePath": "buildTransitive\\HotelTool.Web.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

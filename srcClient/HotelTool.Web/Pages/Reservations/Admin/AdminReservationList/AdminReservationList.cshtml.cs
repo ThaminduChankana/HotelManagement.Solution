@@ -37,6 +37,8 @@ public class AdminReservationListModel : PageModel
         try
         {
             var client = _httpClientFactory.CreateClient("ReservationServiceAPI");
+
+            // API call to get all the reservations
             var response = await client.GetAsync("/api/reservation");
 
             if (response.IsSuccessStatusCode)
@@ -75,6 +77,7 @@ public class AdminReservationListModel : PageModel
             var json = JsonSerializer.Serialize(request, _jsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+            // API call to update a reservation by the admin
             var response = await client.PatchAsync($"/api/reservation/{reservationId}/status", content);
             StatusMessage = response.IsSuccessStatusCode ? "Reservation updated successfully." : "Failed to update reservation.";
         }

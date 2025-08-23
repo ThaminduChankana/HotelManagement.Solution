@@ -118,6 +118,7 @@ namespace HotelTool.Web.Pages.Reservations
                 var json = JsonSerializer.Serialize(request, _jsonOptions);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+                // API call to create a reservation
                 var response = await client.PostAsync("/api/reservation", content);
 
                 if (response.IsSuccessStatusCode)

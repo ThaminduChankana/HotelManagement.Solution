@@ -17,9 +17,4 @@
   <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 </ItemGroup>
 
-  <!-- <ItemGroup>
-    <ProjectReference Include="..\..\Shared\HotelManagement.Shared.Models\HotelManagement.Shared.Models.csproj" />
-    <ProjectReference Include="..\..\Shared\HotelManagement.Shared.Common\HotelManagement.Shared.Common.csproj" />
-  </ItemGroup> -->
-
 </Project>

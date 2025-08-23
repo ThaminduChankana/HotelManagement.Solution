@@ -105,6 +105,8 @@ public class WeeklyReportModel : PageModel
     private async Task<List<Reservation>> GetReservationsAsync()
     {
         var client = _httpClientFactory.CreateClient("ReservationServiceAPI");
+
+        // API call to get all reservation to generate the weekly report
         var response = await client.GetAsync("/api/reservation");
 
         if (response.IsSuccessStatusCode)

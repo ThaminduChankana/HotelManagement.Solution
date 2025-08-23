@@ -26,7 +26,7 @@ builder.Services.AddDbContext<ReservationContext>(options =>
 // Configure HTTP Client for RoomService 
 builder.Services.AddHttpClient<IRoomService, RoomService>(client =>
 {
-    var roomServiceUrl = builder.Configuration["RoomServiceUrl"] ?? "https://hotel-room-api-2024-bua5d4cseba4d8bj.canadacentral-01.azurewebsites.net";
+    var roomServiceUrl = builder.Configuration["RoomServiceUrl"] ?? "https://hotel-room-api-2025-bjecgbcwdjd2hfc3.canadacentral-01.azurewebsites.net";
 
     if (roomServiceUrl.Contains("localhost") && roomServiceUrl.StartsWith("https"))
     {

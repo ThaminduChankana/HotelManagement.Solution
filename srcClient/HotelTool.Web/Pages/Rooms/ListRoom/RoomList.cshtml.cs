@@ -33,6 +33,7 @@ namespace HotelTool.Web.Pages.Rooms
             {
                 // Create an HTTP client using the named client "RoomServiceAPI"
                 var httpClient = _httpClientFactory.CreateClient("RoomServiceAPI");
+                
                 // Make a GET request to retrieve all rooms
                 var response = await httpClient.GetAsync("/api/rooms");
 
@@ -73,6 +74,7 @@ namespace HotelTool.Web.Pages.Rooms
                 if (!string.IsNullOrEmpty(RoomId))
                 {
                     var httpClient = _httpClientFactory.CreateClient("RoomServiceAPI");
+                    
                     // Send a DELETE request to remove the specified room
                     var response = await httpClient.DeleteAsync($"/api/rooms/{RoomId}");
 

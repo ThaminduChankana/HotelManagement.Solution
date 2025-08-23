@@ -194,6 +194,8 @@ namespace HotelTool.Web.Pages.Rooms
                 // Send update request to API
                 var jsonContent = JsonSerializer.Serialize(updateRoomRequest);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // API call to update a room
                 var response = await httpClient.PutAsync($"/api/rooms/{Room.Id}", content);
 
                 if (response.IsSuccessStatusCode)

@@ -80,7 +80,7 @@ public class ChatBotModel : PageModel
             // Create HTTP client configured for Room Service
             var roomClient = _httpClientFactory.CreateClient("RoomServiceAPI");
 
-            // Make async HTTP call to Room Service - non-blocking I/O operation
+            // Make async HTTP call to get the room details for the chatbot
             var response = await roomClient.GetAsync("/api/rooms");
 
             if (response.IsSuccessStatusCode)
@@ -129,7 +129,7 @@ public class ChatBotModel : PageModel
             // Create HTTP client configured for Reservation Service
             var reservationClient = _httpClientFactory.CreateClient("ReservationServiceAPI");
 
-            // Make async HTTP call to Reservation Service 
+            // Make async HTTP call to get the reservation details for the chatbot
             var response = await reservationClient.GetAsync("/api/reservation");
 
             if (response.IsSuccessStatusCode)

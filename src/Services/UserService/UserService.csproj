@@ -26,9 +26,4 @@
    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\HotelManagement.Shared.Models\HotelManagement.Shared.Models.csproj" />
-    <ProjectReference Include="..\..\Shared\HotelManagement.Shared.Common\HotelManagement.Shared.Common.csproj" />
-  </ItemGroup>
-
 </Project>

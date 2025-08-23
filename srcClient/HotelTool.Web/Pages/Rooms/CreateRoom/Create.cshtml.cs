@@ -105,6 +105,8 @@ namespace HotelTool.Web.Pages.Rooms
                 var httpClient = _httpClientFactory.CreateClient("RoomServiceAPI");
                 var jsonContent = JsonSerializer.Serialize(createRoomRequest);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                
+                // API call to create a new room
                 var response = await httpClient.PostAsync("/api/rooms", content);
 
                 // Check API response status

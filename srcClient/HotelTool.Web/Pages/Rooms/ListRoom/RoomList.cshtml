@@ -216,46 +216,48 @@
         let modalCurrentIndex = 0;
         let modalImages = [];
 
-                                    @foreach (var room in Model.Rooms)
-            {
-                <text>
-                    window.slides["@room.Id"] = {
-                        images: [@Html.Raw(string.Join(",", room.ImageUrls.Select(url => $"'{url}'")))],
+        @foreach (var room in Model.Rooms)
+        {
+            <text>
+                window.slides["@room.Id"] = {
+                    images: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(room.ImageUrls)),
                     currentIndex: 0,
                     name: "@room.Name",
                     price: "@room.NormalRoomPrice.ToString("N0")",
                     discountPrice: "@room.NormalRoomAfterDiscount.ToString("N0")",
                     discount: "@room.Discount",
                     guests: "@room.NumberOfGuests",
-                    features: [@Html.Raw(string.Join(",", room.Features.Select(f => $"'{f}'")))],
-                    options: [@Html.Raw(string.Join(",", room.Options.Select(o => $"'{o}'")))]
-                                                                        };
-                </text>
+                    features: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(room.Features)),
+                    options: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(room.Options))
+                };
+            </text>
         }
-            // Slideshow logic
-            function updateSlide(id) {
-                const slide = window.slides[id];
-                const wrapper = document.getElementById("slide-" + id);
-                if (wrapper && slide) {
-                    wrapper.querySelector("img").src = slide.images[slide.currentIndex];
-                }
-            }
 
-        function nextSlide(id) {
+        // Slideshow logic
+        window.updateSlide = function (id) {
+            const slide = window.slides[id];
+            const wrapper = document.getElementById("slide-" + id);
+            if (wrapper && slide) {
+                wrapper.querySelector("img").src = slide.images[slide.currentIndex];
+            }
+        };
+
+        window.nextSlide = function (id) {
             const slide = window.slides[id];
             if (!slide) return;
             slide.currentIndex = (slide.currentIndex + 1) % slide.images.length;
-            updateSlide(id);
-        }
+            window.updateSlide(id);
+        };
 
-        function prevSlide(id) {
+        window.prevSlide = function (id) {
             const slide = window.slides[id];
             if (!slide) return;
             slide.currentIndex = (slide.currentIndex - 1 + slide.images.length) % slide.images.length;
-            updateSlide(id);
-        }
+            window.updateSlide(id);
+        };
+
         // Open modal with room details
-        function openRoomModal(id) {
+        window.openRoomModal = function (id) {
             const data = window.slides[id];
             if (!data) return;
             modalImages = data.images;
@@ -263,53 +265,53 @@
             document.getElementById("modalImage").src = modalImages[0];
             document.getElementById("modalTitle").innerText = data.name;
 
-            const priceDisplay = data.discountPrice !== data.price ?
-                `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.discountPrice}</span> 
-                                             <span style="text-decoration:line-through; color: rgba(255,255,255,0.6);">LKR ${data.price}</span>` :
-                `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.price}</span>`;
+            const priceDisplay = data.discountPrice !== data.price
+                ? `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.discountPrice}</span>
+                   <span style="text-decoration:line-through; color: rgba(255,255,255,0.6);">LKR ${data.price}</span>`
+                : `<span style="color: #e74c3c; font-weight:bold;">LKR ${data.price}</span>`;
 
             document.getElementById("modalBody").innerHTML = `
-                                            <p><strong>Price:</strong> ${priceDisplay}</p>
-                                            <p><strong>Guests:</strong> ${data.guests} person(s)</p>
-                                            <p><strong>Features:</strong></p>
-                                            <ul style="margin-left: 20px;">${data.features.map(f => `<li style="margin-bottom: 5px;">${f}</li>`).join('')}</ul>
-                                            <p><strong>Options:</strong></p>
-                                            <ul style="margin-left: 20px;">${data.options.map(o => `<li style="margin-bottom: 5px;">${o}</li>`).join('')}</ul>
-                                        `;
+                <p><strong>Price:</strong> ${priceDisplay}</p>
+                <p><strong>Guests:</strong> ${data.guests} person(s)</p>
+                <p><strong>Features:</strong></p>
+                <ul style="margin-left: 20px;">${data.features.map(f => `<li style="margin-bottom: 5px;">${f}</li>`).join('')}</ul>
+                <p><strong>Options:</strong></p>
+                <ul style="margin-left: 20px;">${data.options.map(o => `<li style="margin-bottom: 5px;">${o}</li>`).join('')}</ul>
+            `;
             const reserveBtn = document.getElementById("reserveRoomBtn");
             reserveBtn.href = `../../Reservations/User/ReserveRoom/CreateReservation?roomTypeId=${id}`;
 
             document.getElementById("roomModal").style.display = "block";
-        }
+        };
 
-        function closeRoomModal() {
+        window.closeRoomModal = function () {
             document.getElementById("roomModal").style.display = "none";
-        }
+        };
 
-        function modalNext() {
+        window.modalNext = function () {
             modalCurrentIndex = (modalCurrentIndex + 1) % modalImages.length;
             document.getElementById("modalImage").src = modalImages[modalCurrentIndex];
-        }
+        };
 
-        function modalPrev() {
+        window.modalPrev = function () {
             modalCurrentIndex = (modalCurrentIndex - 1 + modalImages.length) % modalImages.length;
             document.getElementById("modalImage").src = modalImages[modalCurrentIndex];
-        }
+        };
 
         // Close modal when clicking outside
         window.onclick = function (e) {
-            if (e.target.id === "roomModal") closeRoomModal();
+            if (e.target.id === "roomModal") window.closeRoomModal();
         };
 
         // Delete confirmation
-        function confirmDelete(roomId, roomName) {
+        window.confirmDelete = function (roomId, roomName) {
             document.getElementById("deleteRoomName").textContent = roomName;
             document.getElementById("deleteRoomId").value = roomId;
             document.getElementById("deleteModal").style.display = "block";
-        }
+        };
 
-        function closeDeleteModal() {
+        window.closeDeleteModal = function () {
             document.getElementById("deleteModal").style.display = "none";
-        }
+        };
     </script>
 }

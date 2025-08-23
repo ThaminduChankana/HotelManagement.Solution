@@ -13,41 +13,56 @@ builder.Services.AddSession(options =>
 });
 QuestPDF.Settings.License = LicenseType.Community;
 
+// For accessing microservices using API Gateway
+var serviceNames = new[] { "UserServiceAPI", "RoomServiceAPI", "ReservationServiceAPI" };
+
+foreach (var serviceName in serviceNames)
+{
+    builder.Services.AddHttpClient(serviceName, client =>
+    {
+        client.BaseAddress = new Uri("http://172.171.48.15/");
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+    });
+}
+
+// For direct microservice access
 // builder.Services.AddHttpClient("UserServiceAPI", client =>
 // {
-//     client.BaseAddress = new Uri("https://hotel-user-api-2024-b4fmgub0hhhxegd2.canadacentral-01.azurewebsites.net/"); 
+//     client.BaseAddress = new Uri("https://hotel-user-api-2025-ftgueta8hcavdrcj.canadacentral-01.azurewebsites.net/"); 
 //     client.DefaultRequestHeaders.Add("Accept", "application/json");
 // });
 
 // builder.Services.AddHttpClient("RoomServiceAPI", client =>
 // {
-//     client.BaseAddress = new Uri("https://hotel-room-api-2024-bua5d4cseba4d8bj.canadacentral-01.azurewebsites.net"); 
+//     client.BaseAddress = new Uri("https://hotel-room-api-2025-bjecgbcwdjd2hfc3.canadacentral-01.azurewebsites.net/"); 
 //     client.DefaultRequestHeaders.Add("Accept", "application/json");
 // });
 
 // builder.Services.AddHttpClient("ReservationServiceAPI", client =>
 // {
-//     client.BaseAddress = new Uri("https://hotel-reservation-api-2024-a5gzhsaddncnf2bv.canadacentral-01.azurewebsites.net"); 
+//     client.BaseAddress = new Uri("https://hotel-reservation-api-2025-awfjesa0a5gybbap.canadacentral-01.azurewebsites.net/"); 
 //     client.DefaultRequestHeaders.Add("Accept", "application/json");
 // });
 
-builder.Services.AddHttpClient("UserServiceAPI", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:8080"); // Local UserService
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
 
-builder.Services.AddHttpClient("RoomServiceAPI", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5013"); // Local RoomService  
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
+// For local services
+// builder.Services.AddHttpClient("UserServiceAPI", client =>
+// {
+//     client.BaseAddress = new Uri("http://localhost:8080"); 
+//     client.DefaultRequestHeaders.Add("Accept", "application/json");
+// });
 
-builder.Services.AddHttpClient("ReservationServiceAPI", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5253"); // Local ReservationService
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
+// builder.Services.AddHttpClient("RoomServiceAPI", client =>
+// {
+//     client.BaseAddress = new Uri("http://localhost:5013"); 
+//     client.DefaultRequestHeaders.Add("Accept", "application/json");
+// });
+
+// builder.Services.AddHttpClient("ReservationServiceAPI", client =>
+// {
+//     client.BaseAddress = new Uri("http://localhost:5258"); 
+//     client.DefaultRequestHeaders.Add("Accept", "application/json");
+// });
 
 
 var app = builder.Build();
